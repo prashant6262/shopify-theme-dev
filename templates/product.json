@@ -1,0 +1,320 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "rating_ezp4qy": {
+          "type": "rating",
+          "disabled": true,
+          "settings": {}
+        },
+        "judge_me_reviews_preview_badge_KNEjyR": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "sku_7pxebH": {
+          "type": "sku",
+          "settings": {
+            "text_style": "body"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "square"
+          }
+        },
+        "inventory_FFQfFM": {
+          "type": "inventory",
+          "settings": {
+            "text_style": "body",
+            "inventory_threshold": 10,
+            "show_inventory_quantity": true
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "whatsapp_button_kWKN9d": {
+          "type": "whatsapp-button",
+          "settings": {}
+        },
+        "bulk_add_to_cart_dRBFhb": {
+          "type": "bulk-add-to-cart",
+          "settings": {
+            "block-title-text": "Buy More, Save More!",
+            "block-title-color": "#121212",
+            "bulk-btn-one-text": "",
+            "bulk-btn-one-qty": 2,
+            "bulk-btn-two-text": "",
+            "bulk-btn-two-qty": 3,
+            "bulk-btn-three-text": "",
+            "bulk-btn-three-qty": 4,
+            "bulk-btn-four-text": "",
+            "bulk-btn-four-qty": 5,
+            "bulk-btn-five-text": "",
+            "bulk-btn-five-qty": 6
+          }
+        },
+        "complementary_dtczar": {
+          "type": "complementary",
+          "settings": {
+            "block_heading": "Pairs well with",
+            "make_collapsible_row": true,
+            "icon": "price_tag",
+            "product_list_limit": 10,
+            "products_per_page": 1,
+            "pagination_style": "dots",
+            "image_ratio": "portrait",
+            "enable_quick_add": true
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "collapsible_tab_wHfE7x": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "",
+            "icon": "check_mark",
+            "content": "",
+            "page": ""
+          }
+        },
+        "collapsible_tab_aUjKTC": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "",
+            "icon": "check_mark",
+            "content": "",
+            "page": ""
+          }
+        },
+        "collapsible_tab_CxWMfq": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Ingredients",
+            "icon": "check_mark",
+            "content": "<h3>Key Features</h3><ul><li>Handmade with premium-quality craftsmanship</li><li>Durable materials designed for long-lasting use</li><li>Smooth, safe, and eco-friendly finish</li><li>Minimal and elegant design suitable for any space</li><li>Lightweight and easy to maintain</li></ul><h3><br/>Why You’ll Love It</h3><ul><li>Unique handcrafted detailing</li><li>Smooth and premium surface finish</li><li>Enhances any décor style</li><li>Lightweight and easy to handle</li><li>Long-lasting and durable build</li></ul>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "rating_ezp4qy",
+        "judge_me_reviews_preview_badge_KNEjyR",
+        "sku_7pxebH",
+        "description",
+        "price",
+        "variant_picker",
+        "inventory_FFQfFM",
+        "quantity_selector",
+        "buy_buttons",
+        "whatsapp_button_kWKN9d",
+        "bulk_add_to_cart_dRBFhb",
+        "complementary_dtczar",
+        "share",
+        "collapsible_tab_wHfE7x",
+        "collapsible_tab_aUjKTC",
+        "collapsible_tab_CxWMfq"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "small",
+        "constrain_to_viewport": false,
+        "media_fit": "cover",
+        "gallery_layout": "thumbnail_slider",
+        "media_position": "left",
+        "image_zoom": "hover",
+        "mobile_thumbnails": "show",
+        "hide_variants": false,
+        "enable_video_looping": true,
+        "enable_wishlist": true,
+        "enable_compare": true,
+        "sizechart_enable": true,
+        "sizechart_lable": "size chart",
+        "show_Tab1_description": true,
+        "Tab1_description": "Description",
+        "collections_show_rating": true,
+        "Tab2_review": "Review",
+        "show_Tab3_shipping_return": true,
+        "Tab3_shipping_return": "Shipping and Return",
+        "Shipping_deatils": "<p>At <strong>krafti-art</strong>, we aim to deliver your furniture safely, promptly, and with care. This Shipping Policy explains how we handle deliveries across India and internationally (if applicable).</p><h2><strong>1. Delivery Timeline</strong></h2><ul><li>Orders are typically delivered within <strong>7–14 business days</strong>, depending on the product type and your location.</li><li>Custom or made-to-order furniture may take <strong>3–4 weeks</strong> for delivery.</li><li>You’ll receive an order confirmation followed by a tracking link once your product is dispatched.</li></ul><h2><strong>2. Shipping Charges</strong></h2><ul><li><strong>Standard shipping is free</strong> across most pin codes in India.</li><li>Remote area or high-floor delivery (without lift access) may incur additional charges.</li><li>International shipping (if applicable) will be calculated at checkout based on the destination.</li></ul><h2><strong>3. Delivery & Installation</strong></h2><ul><li>For eligible furniture, <strong>free doorstep delivery and basic installation</strong> are provided.</li><li>Some products may require <strong>self-assembly</strong>, and tools/manuals will be included.</li><li>Installation services will be scheduled within 48–72 hours of delivery (where available).</li></ul><h2><strong>4. Serviceable Areas</strong></h2><ul><li>We currently ship across all major cities and towns in India.</li><li>If your PIN code is unserviceable, our team will contact you to suggest alternatives or issue a refund.</li></ul>",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "collapsible_content_DMQKzT": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_R4kNmc": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_pebA4n": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_y4Ymkc": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_R4kNmc",
+        "collapsible_row_pebA4n",
+        "collapsible_row_y4Ymkc"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "",
+        "heading_size": "h1",
+        "caption_color": "#c6a87d",
+        "heading_alignment": "center",
+        "layout": "none",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": true,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h1",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "padding_top": 0,
+        "padding_bottom": 16
+      }
+    },
+    "image_banner_J8AqJf": {
+      "type": "image-banner",
+      "blocks": {
+        "text_Yige8Q": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "subheading_color": "#222222",
+            "text_style": "caption-with-letter-spacing"
+          }
+        },
+        "heading_47CTdW": {
+          "type": "heading",
+          "settings": {
+            "heading": "",
+            "heading_size": "h1"
+          }
+        },
+        "buttons_kWwehK": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "",
+            "button_link_1": "",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": ["text_Yige8Q", "heading_47CTdW", "buttons_kWwehK"],
+      "settings": {
+        "image_2": "",
+        "image_overlay_opacity": 30,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "",
+        "image_behavior": "zoom-in",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true
+      }
+    },
+    "recently_viewed_kqKWLd": {
+      "type": "recently-viewed",
+      "settings": {
+        "heading": "Recently Viewed"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "collapsible_content_DMQKzT",
+    "related-products",
+    "image_banner_J8AqJf",
+    "recently_viewed_kqKWLd"
+  ]
+}

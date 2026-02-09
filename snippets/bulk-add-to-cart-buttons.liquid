@@ -1,0 +1,79 @@
+<style>
+   .bundle-section h3 {
+      font-size: 2.2rem;
+     color:{{block.settings.block-title-color}};
+  }
+  .content-container.bulk-add-cart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+        max-width: 44rem;
+  }
+</style>
+
+<div class="content-container">
+  <div class="bundle-section">
+    {% for block in section.blocks %}
+      {% if block.type == 'bulk-add-to-cart' %}
+        {% if block.settings['block-title-text'] != blank %}
+          <h3>{{ block.settings['block-title-text'] }}</h3>
+        {% endif %}
+
+        <div class="content-container bulk-add-cart">
+          {% assign bulk_buttons = 'one,two,three,four,five' | split: ',' %}
+
+          {% for btn in bulk_buttons %}
+            {% assign text_key = 'bulk-btn-' | append: btn | append: '-text' %}
+            {% assign qty_key = 'bulk-btn-' | append: btn | append: '-qty' %}
+
+            {% assign btn_text = block.settings[text_key] %}
+            {% assign btn_qty = block.settings[qty_key] %}
+
+            {% if btn_text != blank %}
+              {% assign safe_qty = btn_qty | default: 1 %}
+              <button
+                class="bundle-discount button button--full-width button-hover-style"
+                type="button"
+                data-input-quantity="{{ safe_qty }}"
+              >
+                {{ btn_text }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let discountButtons = document.querySelectorAll('.bundle-discount');
+
+    discountButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        let quantity = parseInt(this.getAttribute('data-input-quantity')) || 1;
+
+        // Find the quantity input field
+        let quantityInput = document.querySelector('.product .quantity__input');
+        if (quantityInput) {
+          quantityInput.value = quantity;
+          quantityInput.dispatchEvent(new Event('change'));
+
+          // Submit the form
+          setTimeout(() => {
+            let submitButton = document.querySelector('.product .product-form__submit');
+            if (submitButton) {
+              submitButton.click();
+            } else {
+              console.warn('Submit button not found');
+            }
+          }, 200);
+        } else {
+          console.warn('Quantity input not found');
+        }
+      });
+    });
+  });
+</script>

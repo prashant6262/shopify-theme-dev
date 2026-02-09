@@ -1,0 +1,25 @@
+<div id="sticky-cart" class="stickey-cart-pdp {{ settings.select_sticky_type }}" 
+  style="background: {{ settings.sticky_cart_bg }}; color: {{ settings.sticky_cart_text }}; opacity: 0; transform: translateY(100%);">
+  
+  <button id="close-sticky-cart" class="close-sticky-cart" aria-label="Close Sticky Cart">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon icon-close" aria-hidden="true" focusable="false" role="presentation"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+  </button>
+
+  <div class="sticky-cart-content">
+    <div class="sticky-product">
+      <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" width="" height="">
+      <div class="sticky-product-info">
+        <h3 class="h4">{{ product.title }}</h3>
+        {% render 'price' %}
+      </div>
+    </div>
+    {% render 'buy-buttons',
+        block: block,
+        product: product,
+        product_form_id: product_form_id,
+        section_id: section.id,
+        show_pickup_availability: true
+     %}
+  </div>
+</div>
+

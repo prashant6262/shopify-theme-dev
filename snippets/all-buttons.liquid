@@ -1,0 +1,93 @@
+<div class="common-class product-grid-modals product-grid-list">
+  {% if settings.enable_wishlist %}
+    {%- assign item = card_product | default: product -%}
+    <div class="wishlist-wrapper">
+      <button
+        type="button"
+        class="wishlist_button quick-add__submit button button--full-width button--secondary"
+        data-title="{{ item.title | escape }}"
+        data-img="{{ item.featured_image | img_url: '400x' }}"
+        data-price="{{ item.price | money }}"
+        data-url="{{ item.url }}"
+         title="wishlist"
+      >
+        <div class="wishlist--filled">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="https://www.w3.org/2000/svg">
+            <path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" stroke="currentcolor"></path>
+          </svg>
+        </div>
+
+        <div class="wishlist--outline">
+          <svg viewBox="0 0 24 24" xmlns="https://www.w3.org/2000/svg">
+            <rect x="0" fill="none" width="24" height="24"/>
+            <g>
+            <path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z"/>
+           </g>
+          </svg>
+        </div>
+      </button>
+    </div>
+  {%- endif -%}
+
+  {%- assign item2 = card_product | default: product -%}
+
+  {% if settings.enable_compare %}
+    <div class="compare_button">
+      <button
+        type="button"
+        class="compare_button button button--full-width button--secondary quick-add__submit"
+        data-title="{{ item2.title | escape }}"
+        data-image="{{ item2.featured_image | img_url: 'master' }}"
+        data-description="{{ item2.description | strip_html | truncate: 80 }}"
+        data-type="{{ item2.type | escape }}"
+        data-vendor="{{ item2.vendor | escape }}"
+        data-price="{{ item2.price | money }}"
+        title="compare"
+        data-url="{{ item2.url }}"
+        data-availability="{% if item2.available %}In Stock{% else %}Out of Stock{% endif %}"
+      >
+        <svg viewBox="0 0 24 24" fill="none" xmlns="https://www.w3.org/2000/svg">
+          <path d="M22.6605 0H5.24652C4.89135 0.000315286 4.55081 0.141546 4.29967 0.392689C4.04853 0.643832 3.9073 0.984365 3.90698 1.33953V18.7535C3.9073 19.1087 4.04853 19.4492 4.29967 19.7003C4.55081 19.9515 4.89135 20.0927 5.24652 20.093H22.6605C23.0156 20.0927 23.3562 19.9515 23.6073 19.7003C23.8585 19.4492 23.9997 19.1087 24 18.7535V1.33953C23.9997 0.984365 23.8585 0.643832 23.6073 0.392689C23.3562 0.141546 23.0156 0.000315286 22.6605 0ZM22.214 18.307H5.69303V1.78605H22.214V18.307Z" fill="black"/>
+          <path d="M18.307 22.2132H1.78605V5.6923H4.91163V3.90625H1.33953C0.984365 3.90657 0.643832 4.0478 0.392689 4.29894C0.141546 4.55008 0.000315286 4.89061 0 5.24578V22.6597C0.000315286 23.0149 0.141546 23.3554 0.392689 23.6066C0.643832 23.8577 0.984365 23.999 1.33953 23.9993H18.7535C19.1087 23.999 19.4492 23.8577 19.7003 23.6066C19.9515 23.3554 20.0927 23.0149 20.093 22.6597V19.0876H18.307V22.2132Z" fill="black"/>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+
+  {% if settings.enable_quickview %}
+    <modal-opener data-modal="#QuickAdd-{{ card_product.id }}">
+      <button
+        id="{{ product_form_id }}-submit"
+        type="submit"
+        name="add"
+         title="Quick View"
+        class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add animate-arrow{% endif %}"
+        aria-haspopup="dialog"
+        aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+        data-product-url="{{ card_product.url }}"
+      >
+        <svg
+          xmlns="https://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          role="img"
+        >
+            <!-- outer eye -->
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="
+          "></path>
+            <!-- pupil -->
+            <circle cx="12" cy="12" r="3" fill="#000"></circle>
+        </svg>
+
+        {%- if horizontal_quick_add -%}
+          <span class="icon-wrap">
+            {{- 'icon-arrow.svg' | inline_asset_content -}}
+          </span>
+        {%- endif -%}
+        {%- render 'loading-spinner' -%}
+      </button>
+    </modal-opener>
+  {%- endif -%}
+</div>

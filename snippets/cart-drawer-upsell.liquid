@@ -1,0 +1,80 @@
+
+<div class="custom-cart-modal model" id="customCartBackdrop">
+  <div class="custom-cart-modal-content modal-content" id="customCartModal">
+<div class="upsell__header">
+  <div class="upsell__header-inner">
+    <div class="upsell__header-image">
+      <div class="product-card">
+        {% if cart.items.first.product.featured_image != blank %}
+          <img
+            src="{{ cart.items.first.product.featured_image | image_url: width: 600 }}"
+            alt="{{ cart.items.first.product.title }}"
+            width=""
+            height=""
+            loading="lazy loading"
+          >
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="upsell__header-info">
+      <p>
+        <svg xmlns="https://www.w3.org/2000/svg" width="14" height="15" fill="none" viewBox="0 0 14 15">
+          <path fill="#000" d="M2.1875 2.96484C3.51823 1.63411 5.1224.96875 7 .96875c1.8776 0 3.4727.66536 4.7852 1.99609 1.3307 1.3125 1.996 2.90756 1.996 4.78516 0 1.8776-.6653 3.4818-1.996 4.8125C10.4727 13.875 8.8776 14.5312 7 14.5312c-1.8776 0-3.48177-.6562-4.8125-1.9687C.875 11.2318.21875 9.6276.21875 7.75c0-1.8776.65625-3.47266 1.96875-4.78516zm8.668.92969C9.79818 2.81901 8.51302 2.28125 7 2.28125s-2.80729.53776-3.88281 1.61328C2.0599 4.95182 1.53125 6.23698 1.53125 7.75s.52865 2.8073 1.58594 3.8828C4.19271 12.6901 5.48698 13.2188 7 13.2188s2.79818-.5287 3.8555-1.586c1.0755-1.0755 1.6133-2.36978 1.6133-3.8828s-.5378-2.79818-1.6133-3.85547zm-.0274 1.94141c.1641.16406.1641.31901 0 .46484L6.125 10.9766c-.16406.164-.31901.164-.46484 0L3.17188 8.48828c-.16407-.16406-.16407-.31901 0-.46484l.6289-.62891c.14583-.14583.30078-.14583.46484 0L5.87891 9.0625l3.88281-3.85547c.14583-.14583.30078-.13672.46488.02735l.6015.60156z"></path>
+        </svg>
+        You just added
+      </p>
+      <a href="{{ cart.items.first.product.url }}">
+        <h4>{{ cart.items.first.product.title }}</h4>
+      </a>
+    </div>
+  </div>
+  <div class="title-product-text">
+    <h3>Frequently bought with "{{ cart.items.first.product.title }}"</h3>
+  </div>
+</div>
+
+<div class="main-product-recommendations">
+  <product-recommendations
+    data-product-id="{% if cart.items.size > 0 %}{{ cart.items.first.product.id }}{% endif %}"
+    data-section-id="product-recommendations--{{ cart.items.first.product.id }}"
+  >
+  </product-recommendations>
+</div>
+
+
+<div class="upsell-footer">
+  <div class="header">
+    <span class="upsell-price-footer">
+      <div class="header__icon header__icon--cart link focus-inset">
+        {% if cart == 0 %}
+          <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+        {% else %}
+          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+        {% endif %}
+        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+        {%- if cart != 0 -%}
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+      <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+    </span>
+
+    <div class="view-cart">
+      <a
+        href="{{ routes.cart_url }}"
+        id="cart-notification-button"
+        class="button button-hover-style button--full-width"
+      >
+        {{- 'general.cart.view_empty_cart' | t -}}
+      </a>
+    </div>
+  </div>
+</div>
+      </div>
+</div> 

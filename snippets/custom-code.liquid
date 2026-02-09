@@ -1,0 +1,88 @@
+<style>.custom.form__label{margin-bottom: 0.6rem}.field.custom{margin-top:0}.custom .field__input{padding-top:0.8rem}</style>  
+<h2 class="accordion__title custom-code">Custom Product</h2>
+<label class="form__label custom" for="your-name">Your Name</label>
+<div class="field custom">
+    <input class="field__input" form="{{ 'product-form-' | append: section.id }}" type="text" id="your-name" name="properties[Your Name]" required maxlength="20">
+    <script>
+    document.addEventListener("DOMContentLoaded", ()=>{document.querySelector("form[novalidate]").removeAttribute("novalidate")})
+    document.querySelector('#your-name').addEventListener('input',(e)=>{
+    if(!document.querySelector('label[for="your-name"] span')){
+        const span = document.createElement("span");
+        span.style.marginLeft = '10px'
+        document.querySelector('label[for="your-name"]').appendChild(span)
+    }
+    document.querySelector('label[for="your-name"] span').style.display  = 'inline'
+    document.querySelector('label[for="your-name"] span').textContent = e.target.value.length + ' | ' + 20
+    if(e.target.value.length==0){
+        document.querySelector('label[for="your-name"] span').style.display  = 'none'
+    }})
+    </script>
+</div>
+
+<style>.file-upload-container {display: flex;align-items: center;}.file-name {margin-left: 10px;font-style: italic;}</style>
+<div class="product-form__input">
+  <label class="form__label">Your label</label>
+  <div class="file-upload-container">
+    <input id="file-your-label" form="{{ 'product-form-' | append: section.id }}" 
+    name="properties[Your label 1]" multiple style="display: none;" type="file" required />
+    <button id="button-your-label" class="button button-hover-style">Upload File</button>
+    <p id="fileName-your-label" class="file-name">No file chosen</p>
+    </div>
+    <p id="errorMessage" class="error-message" style="display: none;margin-top:0;color:red">Please upload your file(s).</p>
+</div>
+<script>
+document.getElementById('file-your-label').addEventListener('change', function(event) {
+      const files = event.target.files;
+    const fileInput = document.getElementById('file-your-label');
+    const originalForm = fileInput.getAttribute('form');
+    fileInput.parentNode.querySelectorAll('.dynamic-hidden-input-your-label').forEach(input => input.remove());
+    for (let i = 0; i < files.length-1; i++) {
+      const file = files[i];
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'file';
+      let myindex = i + 2
+      hiddenInput.name = 'properties[Your label ' + myindex +']';
+      hiddenInput.classList.add('dynamic-hidden-input-your-label');
+      hiddenInput.classList.add('hidden-input-fileupload');
+      hiddenInput.style.display = 'none';
+      hiddenInput.setAttribute('form', originalForm);
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      hiddenInput.files = dataTransfer.files;
+      fileInput.parentNode.appendChild(hiddenInput);
+    }
+      let fileName;
+      if (files.length === 0) {fileName = 'No file chosen';} 
+      else if (files.length === 1) {fileName = files[0].name;document.getElementById('errorMessage').style.display = 'none'; } 
+      else {fileName = files.length + ' files';document.getElementById('errorMessage').style.display = 'none';}
+      document.getElementById('fileName-your-label').textContent = fileName;
+  });
+  document.getElementById('button-your-label').addEventListener('click', function() {
+    document.getElementById('file-your-label').click();
+  });
+</script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.product-form__submit').addEventListener('click', function(event) {
+        const inputFile = document.getElementById('file-your-label');
+        if (!inputFile.files.length && inputFile.required) {
+            document.getElementById('errorMessage').style.display = 'block'; 
+        }
+    });})</script>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", ()=>{document.querySelector("form[novalidate]").removeAttribute("novalidate")})
+    </script>
+
+
+    <style>.custom.form__label{margin-bottom: 0.6rem}.field.custom{margin-top:0}.custom .field__input{padding-top:0.8rem;font-family: var(--font-body-family);color: rgba(var(--color-foreground),.75);font-size: 1.2rem;}</style>  
+<label class="form__label custom">Enter a date</label>
+<div class="field custom">
+<input class="field__input" type="date" form="{{ 'product-form-' | append: section.id }}"  
+name="properties[Enter a date]" required>
+    <script>
+    document.addEventListener("DOMContentLoaded", ()=>{document.querySelector("form[novalidate]").removeAttribute("novalidate")})
+    </script>
+</div>

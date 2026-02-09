@@ -1,0 +1,96 @@
+<style>
+  .breadcrumbs__link[aria-current="page"] {
+    font-weight: normal;
+    text-decoration: none;
+  }
+  .breadcrumbs__link[aria-current="page"]:hover, .breadcrumbs__link:hover
+  .breadcrumbs__link[aria-current="page"]:focus, .breadcrumbs__link:focus {
+        text-underline-offset: 6px;
+  }
+  .breadcrumbs__item h2, .breadcrumbs__item:not(:last-child):after, .breadcrumb span{
+    color: {{settings.breadcrumb_text_color }};
+  }
+  .breadcrumbs__item h2{
+        text-decoration: none;
+  }
+
+  .breadcrumbs__item h2:hover ,.breadcrumbs__item:not(:last-child):hover:after, .breadcrumb span:hover{
+    color: {{settings.breadcrumb_hover_text_color }};
+}
+  
+</style>
+
+{%- unless template == 'index'-%}
+{%- assign t = template | split: '.' | first -%}
+
+<div class="page-width">
+  <div class="main_breadcrumbs">
+<nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+  <ol class="breadcrumbs__list">
+   
+    {%- case t -%}
+      {%- when 'page' -%}
+        <li class="breadcrumbs__item">
+           <h2>{{ page.title }}</h2>
+        </li>
+      {%- when 'product' -%}
+        {%- if collection.url -%}
+          <li class="breadcrumbs__item">
+           <h2>{{ collection.title }}</h2>
+          </li>
+        {%- endif -%}
+        <li class="breadcrumbs__item">
+          <h2>{{ product.title }}</h2>
+        </li>
+      {%- when 'collection' and collection.handle -%}
+        {%- if current_tags -%}
+          <li class="breadcrumbs__item">
+            <h2>{{ collection.title }}</h2>
+          </li>
+         
+        {%- else -%}
+          <li class="breadcrumbs__item">
+           <h2>{{ collection.title }}</h2>
+          </li>
+        {%- endif -%}
+      {%- when 'blog' -%}
+        {%- if current_tags -%}
+          <li class="breadcrumbs__item">
+            <h2>{{ blog.title }} </h2>
+          </li>
+          
+        {%- else -%}
+          <li class="breadcrumbs__item">
+            <h2>{{ blog.title }}</h2>
+          </li>
+        {%- endif -%}
+      {%- when 'article' -%}
+        <li class="breadcrumbs__item">
+          <h2>{{ article.title }}</h2>
+        </li>
+      {%- else -%}
+        <li class="breadcrumbs__item">
+          <h2>{{ page_title }}</h2>
+        </li>
+    {%- endcase -%}
+  </ol>
+</nav>
+
+<div class="breadcrumb breadcrumbs">
+      <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}" class="breadcrumbs__item">
+      
+     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      </a>
+   <span aria-hidden="true" class="breadcrumb__sep">
+      <svg xmlns="https://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" class="injected-svg" data-src="https://cdn.hugeicons.com/icons/greater-than-stroke-rounded.svg?v=2.0" xmlns:xlink="https://www.w3.org/1999/xlink" role="img" color="#ccc">
+<path d="M7 4L15.3306 10.0405C17.5565 11.6545 17.5565 12.3455 15.3306 13.9595L7 20" stroke="currentcolor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+    </span>
+      <span>{{ page_title }}</span>
+    </div>
+
+
+
+</div>
+</div>
+{%- endunless -%}
