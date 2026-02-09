@@ -1,0 +1,313 @@
+{{ 'section-recently-viewed.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .recently_view_swiper {
+      float: left;
+      width: 100%;
+        padding-bottom: 3rem;
+  }
+    .section-top {
+      padding-top: 3rem;
+  }
+    .recently_view_swiper .product-wrapper .product-description{
+      text-align: left;
+     margin-top: 1.5rem;
+    }
+    .recently_view_swiper .product-wrapper .image-animation {
+          border-radius: var(--border-radius);
+    }
+    .recently_view_swiper .card__heading{
+        padding: .5rem 0rem .7rem 0px;
+            text-align: center;
+    }
+</style>
+
+{% assign is_preorder = false %}
+{% if product.tags contains 'preorder' %}
+  {% assign is_preorder = true %}
+{% endif %}
+
+<script>
+  const pdpData = {
+    productTitle: "{{ product.title }}",
+    variantId: "{{ product.selected_or_first_available_variant.id }}",
+    product_label: "{{ product.metafields.custom.product_label }}",
+    productImg: "{{ product.featured_image | img_url: 'master' }}",
+    productPrice: "{{ product.selected_or_first_available_variant.price | money }}",
+    productcomPrice: "{{ product.selected_or_first_available_variant.compare_at_price | money }}",
+    productUrl: "{{ product.url }}",
+    productAvailable: {{ product.selected_or_first_available_variant.available | json }},
+    preorder: {{ is_preorder | json }},
+     url: "{{ product.url }}"
+  };
+
+  const numberOfProduct = 5;
+  const currPdpTitle = pdpData.productTitle;
+  const localData = localStorage.getItem('recently_viewed');
+  let pdpList = localData ? JSON.parse(localData) : [];
+
+  // Remove duplicate
+  pdpList = pdpList.filter(item => item.productTitle !== currPdpTitle);
+  pdpList.push(pdpData);
+
+  if (pdpList.length > numberOfProduct) {
+    pdpList.shift();
+  }
+
+  localStorage.setItem('recently_viewed', JSON.stringify(pdpList));
+</script>
+
+<div class="{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+  <header class="center">
+    <div class="section-top">
+      <h2 class="center related-products__heading inline-richtext h1">
+        {{ section.settings.heading }}
+      </h2>
+    </div>
+  </header>
+  <div class="page-width">
+    <div class="recently_view_swiper swiper">
+      <div
+        class="js-recentPdpBlock collection recently-collection swiper-wrapper  {{ settings.product_hover_btn }}"
+      ></div>
+    </div>
+  </div>
+</div>
+
+{% for block in section.blocks %}
+      {% case block.type %}
+        {% when '@app' %}
+          {% render block %}
+      {% endcase %}
+    {% endfor %}
+<script>
+  function getRecentPdp() {
+    const pdpData = JSON.parse(localStorage.getItem('recently_viewed'));
+    if (!pdpData || !Array.isArray(pdpData)) return;
+
+    pdpData.reverse();
+    const recentViewHtml = [];
+
+    pdpData.forEach(function(item) {
+      recentViewHtml.push(`
+        <section id="Recent" class="swiper-slide">
+          <div class="product item-row">
+            <div class="product-container" itemtype="https://schema.org/Product">
+              <div class="product-wrapper">
+                <div class="thumbs product-thumb">
+                  <a href="${item.productUrl}" class="image-animation">
+                    <img src="${item.productImg}" loading="lazy" />
+                  </a>
+
+          
+                 <div class="quick-add no-js-hidden">
+                      <product-form>
+                         <grid-product-upform class="grid-product-upform">
+                          <form method="post" action="/cart/add" class="form" novalidate>
+                            <input type="hidden" name="id" class="variant-id" value="${item.variantId}" />
+                            ${item.productAvailable ? (
+                              item.preorder ? `
+                                <button type="submit" class="button button--full-width button--secondary quick-add__submit">
+                                  Pre-order
+                                </button>` :
+                                `
+                                <button type="submit" class="button button--full-width button--secondary quick-add__submit">
+                                  Add to cart
+                                </button>`
+                            ) : `
+                              <button 
+                                type="button" 
+                                class="button button--full-width button--secondary quick-add__submit"
+                                onclick="window.location.href='${item.url}'">
+                                Notify Me
+                              </button>`
+                            }
+                          </form>
+                        </grid-product-upform>
+                              </product-form>
+                            </div>
+
+                <div class="product-description">
+                  <h3 class="card__heading">
+                    <a class="full-unstyled-link" href="${item.productUrl}">
+                      ${item.productTitle}
+                    </a>
+                  </h3>
+
+                  <div class="card-information">
+                    <div class="price price--on-sale">
+                      <div class="price__sale">
+                        <span class="price-item price-item--sale price-item--last">
+                          ${item.productPrice}
+                        </span>
+                        ${item.productcomPrice ? `
+                          <s class="product-price__price compare_price price-item price-item--regular">
+                            ${item.productcomPrice}
+                          </s>` : ''
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      `);
+    });
+
+    document.querySelectorAll('.js-recentPdpBlock').forEach(element => {
+      element.innerHTML = recentViewHtml.join('');
+    });
+  }
+
+  if (window.location.href.includes("/products/")) {
+    getRecentPdp();
+  }
+</script>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    var swiper = new Swiper(".recently_view_swiper", {
+      slidesPerView: 4,
+      spaceBetween: 30,
+      loop: true, 
+       autoplay: {
+        delay: 5000, 
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      breakpoints: {
+        100: {
+          slidesPerView: 1,
+           spaceBetween: 20,
+        },
+        500: {
+          slidesPerView: 2,
+           spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+           spaceBetween: 20,
+        },
+        992: {
+          slidesPerView: 4,
+           spaceBetween: 30,
+        },
+        1200: {
+          slidesPerView: 4,
+           spaceBetween: 30,
+        },
+      },
+    });
+
+
+   const swiperEl = document.querySelector(".recently_view_swiper");
+    if (swiperEl && swiper.autoplay) {
+      swiperEl.addEventListener("mouseenter", () => swiper.autoplay.stop());
+      swiperEl.addEventListener("mouseleave", () => swiper.autoplay.start());
+    }
+  });
+
+     if (!customElements.get('grid-product-upform')) {
+    customElements.define('grid-product-upform', class ProductForm extends HTMLElement {
+      constructor() {
+        super();
+
+        this.form = this.querySelector('form');
+        this.form.querySelector('[name=id]').disabled = false;
+        this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
+        this.cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+        this.submitButton = this.querySelector('[type="submit"]');
+        if (document.querySelector('cart-drawer')) this.submitButton.setAttribute('aria-haspopup', 'dialog');
+      }
+
+      onSubmitHandler(evt) {
+        evt.preventDefault();
+
+        const config = fetchConfig('javascript');
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        delete config.headers['Content-Type'];
+
+        const formData = new FormData(this.form);
+        if (this.cart) {
+          formData.append('sections', this.cart.getSectionsToRender().map((section) => section.id));
+          formData.append('sections_url', window.location.pathname);
+          this.cart.setActiveElement(document.activeElement);
+        }
+        config.body = formData;
+
+        fetch(routes.cart_add_url, config)
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.status) {
+              this.handleErrorMessage(response.description);
+
+              const soldOutMessage = this.submitButton.querySelector('.sold-out-message');
+              if (!soldOutMessage) return;
+              this.submitButton.setAttribute('aria-disabled', true);
+              this.submitButton.querySelector('span').classList.add('hidden');
+              soldOutMessage.classList.remove('hidden');
+              this.error = true;
+              return;
+            } else if (!this.cart) {
+              window.location = window.routes.cart_url;
+              return;
+            }
+
+            this.error = false;
+            const quickAddModal = this.closest('quick-add-modal');
+            if (quickAddModal) {
+              document.body.addEventListener('modalClosed', () => {
+                setTimeout(() => { this.cart.renderContents(response); });
+              }, { once: true });
+              quickAddModal.hide(true);
+            } else {
+              this.cart.renderContents(response);
+            }
+          })
+          .catch((e) => {
+            console.error(e);
+          })
+          .finally(() => {
+            this.submitButton.classList.remove('loading');
+            if (this.cart && this.cart.classList.contains('is-empty')) this.cart.classList.remove('is-empty');
+            if (!this.error) this.submitButton.removeAttribute('aria-disabled');
+          });
+      }
+    });
+  }
+</script>
+
+{% schema %}
+ {
+   "name": "Recently Products",
+   "settings": [
+       {
+         "type": "text",
+         "id": "heading",
+         "default": "Recently Viewed",
+         "label": "Heading"
+       }
+],
+"blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+
+    "presets": [
+   {
+     "name": "Recently Products",
+   }
+ ]
+ }
+{% endschema %}

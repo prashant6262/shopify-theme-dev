@@ -1,0 +1,297 @@
+{%- style -%}
+    .hero-countdown__bg {
+        background-image: url({{ section.settings.background_image | image_url: width: 2000 }});
+        background-size: cover;
+        z-index: 1;
+        display: flex !important;
+        background-position: bottom;
+        background-attachment: fixed;
+    }
+    .section-{{ section.id }}-padding .hero-countdown__label{
+        color: {{ section.settings.text_color }};
+        margin:0;
+    }
+    .section-{{ section.id }}-padding .countdown-item h1, .section-{{ section.id }}-padding .countdown-item p, 
+    .section-{{ section.id }}-padding .countdown-box span{
+        color: {{ section.settings.color }};
+    }
+    .section-{{ section.id }}-padding .hero-countdown__content {
+        text-align: {{ section.settings.content_alignment }};
+    }
+    .section-{{ section.id }}-padding .hero-countdown__heading{
+        color: {{ section.settings.heading_color }};
+    }
+
+    .section-{{ section.id }}-padding .button {
+        border-radius: {{ section.settings.btn_border_radius }}px;
+             background-color: {{ section.settings.button_bg }};
+          color: {{ section.settings.button_text }};
+      }
+              .section-{{ section.id }}-padding .button::before {
+          background-color: {{ section.settings.button_bg_hover }};
+        }
+         .section-{{ section.id }}-padding .button:Hover{
+        color: {{ section.settings.button_text_hover }};
+         }
+
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+
+<section class="section-{{ section.id }}-padding" data-aos="{{ settings.aos_effect }}">
+
+  <div class="hero-countdown">
+  <div class="hero-countdown__bg"></div>
+  <div class="hero-countdown__overlay"></div>
+
+  <div class="hero-countdown__content">
+    {% if section.settings.collection_label != blank %}
+      <p class="hero-countdown__label">
+        {{ section.settings.collection_label }}
+      </p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h1 class="hero-countdown__heading">
+        {{ section.settings.heading | newline_to_br }}
+      </h1>
+    {% endif %}
+
+    <div class="countdown-box" id="countdown1">
+          <div class="countdown-item">
+            <h1 id="days">00</h1>
+            <p>{{ 'general.countdown-timer.days' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="hours">00</h1>
+            <p>{{ 'general.countdown-timer.hours' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="minutes">00</h1>
+            <p>{{ 'general.countdown-timer.min' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="seconds">00</h1>
+            <p>{{ 'general.countdown-timer.sec' | t }}</p>
+          </div>
+        </div>
+
+    {% if section.settings.button_label != blank %}
+      <div>
+        <a href="{{ section.settings.button_link }}" class="button button-hover-style">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+  </div>
+
+</section>
+
+<script>
+  function startCountdown(endTime) {
+    function updateTimer() {
+      let now = new Date().getTime();
+      let timeLeft = new Date(endTime).getTime() - now;
+
+      if (timeLeft > 0) {
+        let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerText = days;
+        document.getElementById('hours').innerText = hours;
+        document.getElementById('minutes').innerText = minutes;
+        document.getElementById('seconds').innerText = seconds;
+      } else {
+        document.getElementById('countdown1').innerHTML = '<p>Offer Expired!</p>';
+      }
+    }
+    setInterval(updateTimer, 1000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    let countdownEndDate = '{{ section.settings.end_date }}';
+    startCountdown(countdownEndDate);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Hero Countdown Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "collection_label",
+      "label": "Top label",
+      "default": "COLLECTION 2024"
+    },
+           {
+      "type": "color",
+      "id": "text_color",
+      "label": "Top label color",
+      "default": "#ffffff"
+    },
+     {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Hand Craft the\nspirit & passion"
+    },
+     {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Text Heading Color",
+      "default": "#fff"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    
+    {
+      "type": "header",
+      "content": "Date"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Countdown end date",
+      "default": "2028-12-31 23:59:59",
+      "info": "YYYY-MM-DD HH:MM:SS"
+    },   
+         {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#fff"
+    },
+
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+     {
+        "type": "range",
+        "id": "btn_border_radius",
+        "label": "Banner Button Radius",
+        "min": 0,
+        "max": 50,
+        "step": 2,
+        "default": 50,
+        "unit": "px"
+    },
+    {
+        "type": "color",
+        "id": "button_bg",
+        "label": "Button background color",
+        "default": "#000000"
+    },
+    {
+        "type": "color",
+        "id": "button_text",
+        "label": "Button text color",
+        "default": "#ffffff"
+    },
+    {
+        "type": "color",
+        "id": "button_bg_hover",
+        "label": "Button hover background color",
+        "default": "#ffffff"
+    },
+    {
+        "type": "color",
+        "id": "button_text_hover",
+        "label": "Button hover text color",
+        "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+"presets": [
+  {
+    "name": "Hero Countdown Banner",
+    "category": "Hero",
+    "settings": {
+      "collection_label": "LIMITED OFFER",
+      "heading": "Hand Craft the\nSpirit & Passion",
+      "content_alignment": "center",
+      "end_date": "2028-12-31 23:59:59",
+      "text_color": "#ffffff",
+      "heading_color": "#ffffff",
+      "color": "#ffffff",
+      "button_label": "Shop Now",
+      "btn_border_radius": 50,
+      "button_bg": "#000000",
+      "button_text": "#ffffff",
+      "button_bg_hover": "#ffffff",
+      "button_text_hover": "#000000"
+    }
+  }
+]
+
+}
+{% endschema %}

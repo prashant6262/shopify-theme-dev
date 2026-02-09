@@ -1,0 +1,206 @@
+{%- style -%}
+  .tt-custom-info .subheading{
+  color: {{section.settings.subheading_color}};
+  }
+
+  {% for block in section.blocks %}
+  .tt-custom-info .features p{
+  color: {{block.settings.text_color}};
+  }
+  .tt-custom-info .features .feature-item:hover h3{
+    color: {{block.settings.text_color_hover}};
+        transition: color .5s;
+  }
+  {% endfor %}
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+    overflow-x:clip;
+  }
+
+  @media screen and (min-width: 768px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="tt-custom-info section-{{ section.id }}-padding" data-aos="{{ settings.aos_effect }}">
+  <div class="">
+    <div class="main-info">
+      <div class="image-animation images">
+        {% if section.settings.main_image != blank %}
+          <img
+            src="{{ section.settings.main_image | img_url: 'master' }}"
+            width=""
+            height=""
+            class="main-image"
+            alt="{{ section.settings.heading }}"
+          >
+        {% else %}
+          {{ 'product-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+    
+      </div>
+
+      <div class="content">
+        <div>
+          {% if section.settings.subheading != blank %}
+            <p class="subheading">{{ section.settings.subheading }}</p>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            <h2>{{ section.settings.heading }}</h2>
+          {% endif %}
+        </div>
+
+        <div class="features">
+          {% for block in section.blocks %}
+            <div class="feature-item">
+              {% if block.settings.icon_image != blank %}
+                <div class="feature-icon">
+                  <img src="{{ block.settings.icon_image | img_url: 'master' }}" width="" height="" alt="icon image">
+                </div>
+             
+              {% endif %}
+              <div class="feature-text">
+                {% if block.settings.feature_title != blank %}
+                  <h3>{{ block.settings.feature_title }}</h3>
+                {% endif %}
+                {% if block.settings.feature_text != blank %}
+                  <p>{{ block.settings.feature_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div>
+          {% if section.settings.button_text != blank %}
+            <a href="{{ section.settings.button_link }}" class="button button-hover-style">
+              {{- section.settings.button_text -}}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT Custom Info",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "More nature in more homes"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Sub Heading Color",
+      "default": "#4a4d27"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Handmade with patience and love for the artisanal craft"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image",
+      "info": "image size 510 width X 640 height"
+    },
+
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_title",
+          "label": "Feature Title",
+          "default": "High quality product"
+        },
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Feature Description",
+          "default": "Each item is made with care and attention to detail."
+        },
+        {
+          "type": "color",
+          "id": "text_color_hover",
+          "label": "Text Color",
+          "default": "#4a4d27"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Description Color",
+          "default": "#7A7A7A"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "image size width 45 X 45 height"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+  {
+    "name": "TT Custom Info",
+    "category": "Custom",
+  }
+]
+
+}
+{% endschema %}

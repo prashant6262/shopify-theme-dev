@@ -1,0 +1,355 @@
+
+{%- style -%}
+  .section-{{ section.id }}-padding .subcollection-title h2{
+    font-size:{{section.settings.font_size_title}}px;
+  }
+  @media(min-width:768px){
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+}
+
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+
+<style>
+  
+   @keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-trigger.animate--fadeInUp {
+  opacity: 0;
+  animation: fadeInUp 0.9s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+.scroll-trigger.animate--fadeInUp {
+  will-change: transform, opacity;
+}
+
+.subcollection .cate-title-contet {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 0 0 4rem;
+}
+.subcollection .cate-title-contet h2 {
+  font-size: 4.6rem;
+  width: 100%;
+  max-width: 55rem;
+  text-transform: capitalize;
+  margin: 0;
+  flex-wrap: wrap;
+  float: left;
+}
+.subcollection .cate-title-contet p {
+  padding: 1rem 0 0;
+  clear: both;
+  margin: 0;
+}
+.subcollection .collection_img img {
+  max-width: 100%;
+  height: auto;
+      width: 100%;
+}
+.subcollection .collection_img .image-animation{
+  border-radius:var(--border-radius);
+}
+
+@media (max-width: 1500px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 44px;
+  }
+}
+@media (max-width: 1400px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 40px;
+  }
+}
+@media (max-width: 1199px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 38px;
+  }
+}
+@media (max-width: 991px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 34px;
+  }
+  .subcollection .collection-cate-heading span {
+    font-size: 2.2rem;
+  }
+  .subcollection .cate-title-contet {
+    margin: 0 0 2rem;
+  }
+}
+@media (max-width: 767px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 30px;
+  }
+  .subcollection .collection-cate-heading span {
+    font-size: 2rem;
+  }
+  .subcollection .cate-title-contet p {
+    display: none;
+  }
+}
+@media (max-width: 575px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 2.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .subcollection .cate-title-contet h2 {
+    font-size: 2.2rem;
+  }
+  .subcollection .collection-cate-heading span {
+    font-size: 1.8rem;
+  }
+}
+  </style>
+
+ {% if collection.metafields.custom.subcollections %}
+
+<div class="section-{{ section.id }}-padding">
+  <div
+    data-section-id="{{ section.id }}"
+    data-section-type="tt--slider-wrap"
+    class="subcollection {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    data-aos="{{ settings.aos_effect }}"
+  >
+    <div class="page-width">
+
+        <div class="swiper {{ section.id }}--subcollection">
+          <div class="swiper-wrapper">
+             {% for subcollection in collection.metafields.custom.subcollections.value %}
+             
+              <div id="" class="swiper-slide collection_cat_item">
+                <div class="category_content col-sm-12">
+                  <div class="tt_cat_content">
+                    <div class="collection_img">
+                     <a href="{{ subcollection.url }}">
+                        <div class="image-animation">
+                        
+                           <img src="{{ subcollection.image | img_url: 'master' }}" alt="collection image" loading="lazy" width="" height="">
+                         
+                        </div>
+                      </a>
+                    </div>
+                    
+        
+              <div class="main-list-collection">
+                    <div class="collection-count-list">
+                     <h3 class="collection-cate-heading card__heading">
+                        <a href="{{ subcollection.url }}" class="full-unstyled-link">
+                            {{ subcollection.title }}
+                        </a>
+                      </h3>
+                       <p>{{ subcollection.products_count }} {{ section.settings.items }} </p>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+    
+    </div>
+  </div>
+</div>
+
+
+     {% endif %}
+  
+     {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when '@app' -%}
+        {% render block %}
+    {%- endcase -%}
+  {%- endfor -%}
+
+
+   <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const swiper = new Swiper(".{{ section.id }}--subcollection", {
+      slidesPerView: {{ section.settings.col_desktop }},
+      spaceBetween: {{ section.settings.space_between }},
+      autoplay: {{ section.settings.enable_autoplay }} ? {
+        delay: {{ section.settings.autoplay_delay }},
+        disableOnInteraction: false,
+      } : false, 
+      breakpoints: {
+        100: {
+          slidesPerView: 1,
+          spaceBetween: 30
+        },
+        450: {
+          slidesPerView: 2,
+          spaceBetween: 20
+        },
+          767: {
+          slidesPerView: 3,
+            spaceBetween: 20
+        },
+         1050: {
+          slidesPerView: 4,
+            spaceBetween: 20
+        },
+        1150: {
+          slidesPerView: 5,
+          spaceBetween: 25
+        },
+        1400: {
+          slidesPerView: {{ section.settings.col_desktop }},
+           spaceBetween: 30
+        }
+      }
+    });
+
+    // Pause autoplay on hover
+    const swiperEl = document.querySelector(".{{ section.id }}--subcollection");
+    if (swiperEl && swiper.autoplay) {
+      swiperEl.addEventListener("mouseenter", () => swiper.autoplay.stop());
+      swiperEl.addEventListener("mouseleave", () => swiper.autoplay.start());
+    } 
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Subcollections",
+  "settings": [
+    {
+      "type": "range",
+      "id": "grid_columns",
+      "label": "SubCollection Number of Columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+     {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show Title",
+      "default": true
+    },
+      {
+      "type": "text",
+      "id": "items",
+      "label": "items text",
+      "default": "items"
+    },
+    
+    {
+      "type": "range",
+      "id": "font_size_title",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font size",
+      "default": 16
+    },
+    {
+      "type":"header",
+      "content":"Slider Settings"
+    },
+    {
+      "type":"range",
+      "id":"col_desktop",
+      "min":2,
+      "max":20,
+      "step":1,
+      "label":"Show slide in DESKTOP",
+      "default":5
+    },
+    {
+      "type":"range",
+      "id":"space_between",
+      "min":10,
+      "max":100,
+      "step":1,
+      "label":"Space Between Slide",
+      "default":25
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type":"range",
+      "id":"autoplay_delay",
+      "min":1000,
+      "max":6000,
+      "step":100,
+      "label":"Autoplay delay (ms)",
+      "default":3000
+    },
+    {
+      "type":"range",
+      "id":"col_mobile",
+      "min":1,
+      "max":20,
+      "step":1,
+      "label":"Show slide in MOBILE",
+      "default":1
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+   "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subcollections",
+    }
+  ]
+}
+{% endschema %}

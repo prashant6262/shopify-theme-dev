@@ -1,0 +1,298 @@
+{% style %}
+
+    .section-{{ section.id }}-padding {
+            padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+            padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+          }
+          {% for block in section.blocks %}
+            .card--{{ block.id }} h2{
+            color:{{ block.settings.heading_color }};
+          }
+           .card--{{ block.id }} p{
+            color:{{ block.settings.top_label_color }};
+          }
+             .card--{{ block.id }} .button {
+        border-radius: {{ block.settings.btn_border_radius }}px;
+             background-color: {{ block.settings.button_bg }};
+          color: {{ block.settings.button_text }};
+      }
+              .card--{{ block.id }} .button::before {
+          background-color: {{ block.settings.button_bg_hover }};
+        }
+         .card--{{ block.id }} .button:Hover{
+        color: {{ block.settings.button_text_hover }};
+         }
+         .tt-cms-banner .banner-cards-wrapper > .card--{{ block.id }}.banner-card:nth-child(3) .banner-card-content::after{
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: auto;
+                margin: auto;
+                top: -75px;
+                {% if block.settings.background_shape != blank %}
+                background-image: url({{ block.settings.background_shape | image_url }});
+                {% endif %}
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+                width: 60px;
+                height: 60px;
+            }
+                {% endfor %}
+             .section-{{ section.id }}-padding .banner-card {
+              border-radius: {{ section.settings.featured_card_radius }}px;
+            }
+           @media screen and (min-width: 750px) {
+            .section-{{ section.id }}-padding {
+              padding-top: {{ section.settings.padding_top }}px;
+              padding-bottom: {{ section.settings.padding_bottom }}px;
+            }
+          }
+{% endstyle %}
+
+
+<div class="section-{{ section.id }}-padding tt-cms-banner" data-aos="{{ settings.aos_effect }}" data-aos="{{ settings.aos_effect }}">
+    <div class="{{ section.settings.container_type }}">
+<div class="banner-cards-wrapper">
+   {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'card' %}
+    <div class="banner-card banner-image card--{{ block.id }} custom-hover image-animation shades-animation">
+      {% if block.settings.image != blank %}
+        <a href="{{ block.settings.image_url }}" class="banner-image">
+            <img src="{{ block.settings.image | img_url: 'master' }}" alt="" width="" height="" loading="lazy">
+        </a>
+      {% endif %}
+
+      <div class="banner-card-content">
+        {% if block.settings.label != blank %}
+          <p class="label">{{ block.settings.label }}</p>
+        {% endif %}
+
+        {% if block.settings.title != blank %}
+          <h2>{{ block.settings.title }}</h2>
+        {% endif %}
+
+        {% if block.settings.button_label != blank %}
+            <div>
+          <a class="button button-hover-style" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+</div>
+</div>
+</div>
+
+
+{% schema %}
+{
+  "name": "TT CMS Banner",
+  "settings": [
+
+     {
+  "type": "select",
+  "id": "container_type",
+  "label": "Container width",
+  "default": "container--large",
+  "options": [
+    {
+      "value": "container",
+      "label": "Contained (Default)"
+    },
+    {
+      "value": "container--large",
+      "label": "Large container"
+    }
+  ]
+},
+    {
+      "type": "range",
+      "id": "featured_card_radius",
+      "label": "Featured card border radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+     {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Image",
+          "info": "Image size "
+        },
+         {
+          "type": "url",
+          "id": "image_url",
+          "label": "Image URL"
+        },
+        {
+        "type": "image_picker",
+        "id": "background_shape",
+        "label": "Background Shape Image",
+        "info":"this is use only 3 block only."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Top Label"
+        },
+         {
+          "type": "color",
+          "id": "top_label_color",
+          "label": "Top Label Color",
+          "default": "#EF8F75"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Main Title"
+        },
+         {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#34373F"
+        },
+        {
+        "type": "header",
+        "content": "button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+               {
+    "type": "range",
+    "id": "btn_border_radius",
+    "label": "Banner Button Radius",
+    "min": 0,
+    "max": 50,
+    "step": 2,
+    "default": 50,
+    "unit": "px"
+  },
+  {
+  "type": "color",
+  "id": "button_bg",
+  "label": "Button background color",
+  "default": "#000000"
+},
+{
+  "type": "color",
+  "id": "button_text",
+  "label": "Button text color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_bg_hover",
+  "label": "Button hover background color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_text_hover",
+  "label": "Button hover text color",
+  "default": "#fff"
+}
+       
+      ]
+    },
+      {
+      "type": "@app"
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+  {
+    "name": "TT CMS Banner",
+    "category": "Custom",
+    "settings": {
+      "container_type": "container--large",
+      "featured_card_radius": 16,
+      "padding_top": 0,
+      "padding_bottom": 36
+    },
+    "blocks": [
+      {
+        "type": "card",
+        "settings": {
+          "label": "New Arrival",
+          "top_label_color": "#EF8F75",
+          "title": "Modern Handmade Decor",
+          "heading_color": "#34373F",
+          "button_label": "Shop Now"
+        }
+      },
+      {
+        "type": "card",
+        "settings": {
+          "label": "Best Seller",
+          "top_label_color": "#EF8F75",
+          "title": "Premium Home Accessories",
+          "heading_color": "#34373F",
+          "button_label": "Explore"
+        }
+      },
+      {
+        "type": "card",
+        "settings": {
+          "label": "Limited Edition",
+          "top_label_color": "#EF8F75",
+          "title": "Artisan Crafted Collection",
+          "heading_color": "#34373F",
+          "button_label": "View Collection"
+        }
+      }
+    ]
+  }
+]
+
+
+}
+{% endschema %}

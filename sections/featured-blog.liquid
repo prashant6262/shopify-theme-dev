@@ -1,0 +1,258 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-featured-blog.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+{%- style -%}
+.section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top | times: 0.55 | round: 0 }}px;
+  padding-bottom: {{ section.settings.padding_bottom | times: 0.55 | round: 0 }}px;
+}
+
+  .main-featured-blog .banner__buttons .button{
+    font-size: 1.3rem;
+    padding: 0 1.5rem;
+    min-height: calc(3.8rem + var(--buttons-border-width) * 2);
+    min-width: calc(9rem + var(--buttons-border-width) * 2);
+  }
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+}
+.main-featured-blog .caption-text{
+ color:{{ section.settings.text_color }}; 
+}
+
+.blog__posts .card-wrapper {
+  background-color: {{ section.settings.card_color }};
+}
+.main-featured-blog {
+    position: relative;
+}
+
+.blog-swiper {
+  position: relative;
+}
+
+.blog-swiper .swiper-slide {
+  height: auto;
+}
+
+.blog-swiper .swiper-button-prev,
+.blog-swiper .swiper-button-next {
+  color: currentColor;
+}
+
+.blog-swiper .swiper-button-disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+{%- endstyle -%}
+
+
+<div class="blog main-featured-blog  section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+
+  <div class="container">
+  {%- if section.settings.heading != blank -%}
+    <div class="center title-wrapper">
+       {% if section.settings.caption != blank %}
+        <p class="caption-text uppercase">
+          {{ section.settings.caption | escape }}
+        </p>
+        {% endif %}
+         {% if section.settings.heading != blank %}
+              <h2
+                id="SectionHeading-{{ section.id }}"
+                class="blog__title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                {% endif %}
+              >
+                {{ section.settings.heading }}
+              </h2>
+           
+          {% endif %}
+     
+    </div>
+  {%- endif -%}
+
+  <div class="swiper blog-swiper blog-{{ section.id }}">
+    <ul class="swiper-wrapper blog__posts articles-wrapper">
+      {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
+        {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
+          <li class="swiper-slide blog__post article">
+            {% render 'article-card',
+            blog: section.settings.blog,
+                article: article,
+                media_aspect_ratio: 0.90,
+                show_image: section.settings.show_image,
+                show_date: section.settings.show_date,
+                show_author: section.settings.show_author,
+                show_readmore: section.settings.show_readmore
+            %}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+     
+  </div>
+   <div class="swiper-button-prev custom-btn"></div>
+      <div class="swiper-button-next custom-btn"></div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  new Swiper('.blog-{{ section.id }}', {
+    slidesPerView: 1,
+    spaceBetween: 15,
+    speed: 700,
+    watchOverflow: true,
+
+    navigation: {
+      nextEl: ".main-featured-blog .swiper-button-next",
+      prevEl: ".main-featured-blog .swiper-button-prev",
+    },
+
+    breakpoints: {
+      479: {
+        slidesPerView: 2,
+        spaceBetween: 15,
+      },
+      990: {
+        slidesPerView: 2,
+        spaceBetween: 25,
+      },
+       991: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      }
+    }
+  });
+});
+</script>
+
+{% schema %}
+{
+"name": "t:sections.featured-blog.presets.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Latest Stories"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "hxl",
+          "label": "t:sections.all.heading_size.options__4.label"
+        },
+        {
+          "value": "hxxl",
+          "label": "t:sections.all.heading_size.options__5.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+       {
+      "type": "text",
+      "id": "caption",
+      "default": "Add a tagline",
+      "label": "Text"
+    },
+     {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Show image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": true,
+      "label": "Show author"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_readmore",
+      "default": true,
+      "label": "Show Read More button"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Card background",
+      "default": "#f7f4ef"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+     "name": "t:sections.featured-blog.presets.name"
+    }
+  ]
+}
+{% endschema %}

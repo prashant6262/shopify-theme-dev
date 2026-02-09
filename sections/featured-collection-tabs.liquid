@@ -1,0 +1,359 @@
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if section.settings.quick_add == 'bulk' -%}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% style %}
+      .tabbed-collections {
+        color:{{ section.settings.text_color }};
+      }
+          .tabbed-collections .tabs button span:before {
+               background: {{ section.settings.tab_text_color }};
+          }
+          .tabbed-collections .tabs button.active span,   .tabbed-collections .tabs button:hover span{
+          color: {{ section.settings.tab_text_color }};
+              transition: color .5s;
+              }
+   .tabbed-collections .tabs button span:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 2px;
+      width: 0;
+      transition: width .4s ease-in-out;
+  }
+  .tabbed-collections .tabs button.active span:before, .tabbed-collections .tabs .tab-btn:hover span:before{
+      width: 100%;
+  }
+    .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+        padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      }
+       @media screen and (min-width: 750px) {
+        .section-{{ section.id }}-padding {
+          padding-top: {{ section.settings.padding_top }}px;
+          padding-bottom: {{ section.settings.padding_bottom }}px;
+        }
+      }
+{% endstyle %}
+
+<div
+  class="collection main-tabs-collec{% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %} section-{{ section.id }}-padding"
+  data-aos="{{ settings.aos_effect }}"
+>
+  <div class="tabbed-collections container">
+    <div class="collection__title">
+      <div class="top-title center">
+        <div>
+          {%- if section.settings.caption != blank -%}
+            <p
+              class="collecion-subtext uppercase"
+              {{ section.shopify_attributes }}
+            >
+              {{ section.settings.caption | escape }}
+            </p>
+          {%- endif -%}
+
+          {%- if section.settings.title != blank -%}
+            <h2 class="title h1">
+              {{ section.settings.title }}
+            </h2>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_big_sell %}
+          <a
+            href="{{ section.settings.collection_url }}"
+            role="link"
+            class="button{% if section.settings.button_style_secondary %} button--primary{% else %} common-class-button button button--secondary button-hover-style{% endif %}"
+            {{ section.shopify_attributes }}
+          >
+            {{ 'sections.featured_collection.big_sale' | t }}
+            {% if section.settings.button_style_secondary %}
+              <span class="svg-wrapper">
+                <svg xmlns="https://www.w3.org/2000/svg" fill="none" class="icon icon-arrow" viewBox="0 0 14 10">
+                  <path fill="currentColor" fill-rule="evenodd" d="M8.537.808a.5.5 0 0 1 .817-.162l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L11.793 5.5H1a.5.5 0 0 1 0-1h10.793L8.646 1.354a.5.5 0 0 1-.109-.546" clip-rule="evenodd"></path>
+                </svg>
+              </span>
+            {% endif %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="tabs">
+      {% for block in section.blocks %}
+        <button
+          class="tab-btn{% if forloop.first %} active{% endif %}"
+          data-tab="tab-{{ block.id }}"
+        >
+          <span>{{ block.settings.tab_title }}</span>
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="tab-contents">
+      {% for block in section.blocks %}
+        <div
+          id="tab-{{ block.id }}"
+          class="tab-content{% if forloop.first %} active{% endif %}"
+        >
+          {% if block.settings.collection != blank %}
+            <div class="swiper tab-swiper-{{ block.id }}">
+              <div class="swiper-wrapper">
+                {% for product in block.settings.collection.products %}
+                  <div class="swiper-slide">
+                    {% render 'card-product',
+                      card_product: product,
+                      media_aspect_ratio: 'adapt',
+                      image_shape: 'default',
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_rating: section.settings.show_rating,
+                      section_id: section.id,
+                      quick_add: section.settings.quick_add
+                    %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="swiper-button-prev custom-swiper-button"></div>
+      <div class="swiper-button-next custom-swiper-button"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tabID = btn.dataset.tab;
+
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        document.getElementById(tabID).classList.add("active");
+      });
+    });
+
+    const swipers = {};
+
+    document.querySelectorAll(".tab-content").forEach(tab => {
+      const swiperEl = tab.querySelector(".swiper");
+      if (!swiperEl) return;
+
+      const id = swiperEl.classList[1];
+
+      swipers[id] = new Swiper("." + id, {
+        slidesPerView: {{ section.settings.col_desktop }},
+        spaceBetween: {{ section.settings.space_between }},
+        loop: true,
+        autoplay: {{ section.settings.enable_autoplay }} ? {
+          delay: {{ section.settings.autoplay_delay }},
+          disableOnInteraction: false,
+        } : false,
+         navigation: {
+          nextEl: ".collection .swiper-button-next",
+          prevEl: ".collection .swiper-button-prev"
+        },
+        breakpoints: {
+          100: { slidesPerView: 1, spaceBetween: 20 },
+          500: { slidesPerView: 2, spaceBetween: 20 },
+          700: { slidesPerView: 3, spaceBetween: 20 },
+          991: { slidesPerView: {{ section.settings.col_desktop }} }
+        }
+      });
+
+      swiperEl.addEventListener("mouseenter", () => {
+        if (swipers[id].autoplay) swipers[id].autoplay.stop();
+      });
+      swiperEl.addEventListener("mouseleave", () => {
+        if (swipers[id].autoplay) swipers[id].autoplay.start();
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured Collection Tabs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section sub Text"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "default": "Best Seller",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#C6A87D"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Tab Text Color",
+      "default": "#C6A87D"
+    },
+
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Trending Products",
+      "label": "t:sections.featured-collection.settings.title.label"
+    },
+
+    {
+      "type": "header",
+      "content": "Product Card Settings"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "standard",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "info": "t:sections.main-collection-product-grid.settings.quick_add.info",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+        },
+        {
+          "value": "bulk",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "range",
+      "id": "col_desktop",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "label": "Show slide in DESKTOP",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "label": "Space Between Slide",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 1000,
+      "max": 6000,
+      "step": 100,
+      "label": "Autoplay delay (ms)",
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Title",
+          "default": "Featured"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Featured Collection Tabs"
+    }
+  ]
+}
+{% endschema %}

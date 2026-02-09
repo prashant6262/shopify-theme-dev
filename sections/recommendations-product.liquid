@@ -1,0 +1,148 @@
+<style>
+  .product-notification{
+    background:{{section.settings.bg_color}};
+  }
+</style>
+
+{% if section.settings.show_notification %}
+  <div class="product-notification pos-{{section.settings.notify_product_pos}}" data-time="{{section.settings.delay_time}}">
+      <a class="closeNotify">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon icon-close" aria-hidden="true" focusable="false" role="presentation"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </a>    
+      <div class="product-suggest">
+        <a class="image-animation product-image" href=""><img src="" alt=""></a>
+        <div class="column-right">
+          <label>
+            <span class="lang1">{{section.settings.product_title}}</span>
+          </label>
+          <a class="product-name" href=""></a>
+          <div class="from-ago"></div>
+          <div class="time-ago"></div>
+        </div>
+      </div>
+      <div class="hide">
+        {% for block in section.blocks %}
+            {%- assign product_id = 'add_product' | append:i -%}
+            {%- assign block_product_id = block.settings[product_id] -%}
+            {%- if block_product_id != blank -%}
+            {% assign product = all_products[block_product_id] %}
+            {%- unless check_product_id contains product.id -%}
+              <div class="data-product" data-id="{{ product.id }}" data-image="{{ product.featured_image.src | img_url: '85x' }}" data-url="{{ product.url | within: collection }}" data-title="{{ product.featured_image.alt }}" data-alt="{{ product.featured_image.alt }}" data-local="{{  block.settings.product_location }}" data-time="{{  block.settings.product_time }}"></div>    
+            {%- endunless -%}
+            {%- endif -%}	
+        {% endfor %}	
+      </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Recommendations Product",
+	"class": "recommendations-product",
+    "settings": [
+		{
+        "type": "checkbox",
+        "id": "show_notification",
+        "label": "Show Product Notification",
+        "default":true
+      },
+	  {  "type": "select",
+        "id": "notify_product_pos",
+        "label": "Product Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+	},
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background Color",
+        "default":"#fff"
+      },
+	 {
+        "type": "text",
+        "id": "product_title",
+        "label": "Product title",
+       "default":"Product Notification"
+      },		
+	{
+        "type": "text",
+        "id": "delay_time",
+        "label": "Delay Time",
+        "default":"3000"
+      }
+    ],
+    "blocks": [	
+      {
+        "type": "text_block",
+        "name": "Add Product",
+        "settings": [				
+          {
+            "type": "product",
+            "id": "add_product",
+            
+            "label": "Add Product"
+          },
+		  {
+            "type": "text",
+            "id": "product_location",
+            "label": "Product Location",
+            "default":"In Bauru, Brazil"
+          },
+		  {
+            "type": "text",
+            "id": "product_time",
+            "label": "Product Time",
+            "default":"About 35 Minutes Ago"
+      	  }
+        ]
+      }
+    ],
+"presets": [
+  {
+    "name": "Recommendations Product",
+    "settings": {
+      "show_notification": true,
+      "notify_product_pos": "left",
+      "bg_color": "#ffffff",
+      "product_title": "Product Notification",
+      "delay_time": "3000"
+    },
+    "blocks": [
+      {
+        "type": "text_block",
+        "settings": {
+          "add_product": "classic-t-shirt",
+          "product_location": "In Mumbai, India",
+          "product_time": "About 10 Minutes Ago"
+        }
+      },
+      {
+        "type": "text_block",
+        "settings": {
+          "add_product": "sample-hat",
+          "product_location": "In Delhi, India",
+          "product_time": "About 5 Minutes Ago"
+        }
+      },
+      {
+        "type": "text_block",
+        "settings": {
+          "add_product": "sample-mug",
+          "product_location": "In Bangalore, India",
+          "product_time": "Just Now"
+        }
+      }
+    ]
+  }
+]
+
+  }
+{% endschema %}

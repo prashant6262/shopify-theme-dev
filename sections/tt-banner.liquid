@@ -1,0 +1,411 @@
+{% style %}
+
+    .section-{{ section.id }}-padding {
+            padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+            padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+          }
+        
+
+.section-{{ section.id }} .first-banner .label {
+  color: {{ section.settings.card1_label_color }};
+}
+.section-{{ section.id }} .first-banner h2 {
+  color: {{ section.settings.card1_heading_color }};
+}
+.section-{{ section.id }} .first-banner .button {
+  background: {{ section.settings.card1_button_bg }};
+  color: {{ section.settings.card1_button_text }};
+}
+.section-{{ section.id }} .first-banner .button::before {
+  background: {{ section.settings.card1_button_bg_hover }};
+}
+.section-{{ section.id }} .first-banner .button:hover {
+  color: {{ section.settings.card1_button_text_hover }};
+}
+
+/* Card 2 colors */
+.section-{{ section.id }} .second-banner .label {
+  color: {{ section.settings.card2_label_color }};
+}
+.section-{{ section.id }} .second-banner h2 {
+  color: {{ section.settings.card2_heading_color }};
+}
+.section-{{ section.id }} .second-banner .button {
+  background: {{ section.settings.card2_button_bg }};
+  color: {{ section.settings.card2_button_text }};
+}
+.section-{{ section.id }} .second-banner .button::before {
+  background: {{ section.settings.card2_button_bg_hover }};
+}
+.section-{{ section.id }} .second-banner .button:hover {
+  color: {{ section.settings.card2_button_text_hover }};
+}
+
+/* Card 3 colors */
+.section-{{ section.id }} .third-banner .label {
+  color: {{ section.settings.card3_label_color }};
+}
+.section-{{ section.id }} .third-banner h2 {
+  color: {{ section.settings.card3_heading_color }};
+}
+.section-{{ section.id }} .third-banner .button {
+  background: {{ section.settings.card3_button_bg }};
+  color: {{ section.settings.card3_button_text }};
+}
+.section-{{ section.id }} .third-banner .button::before {
+  background: {{ section.settings.card3_button_bg_hover }};
+}
+.section-{{ section.id }} .third-banner .button:hover {
+  color: {{ section.settings.card3_button_text_hover }};
+}
+
+
+           @media screen and (min-width: 750px) {
+            .section-{{ section.id }}-padding {
+              padding-top: {{ section.settings.padding_top }}px;
+              padding-bottom: {{ section.settings.padding_bottom }}px;
+            }
+          }
+{% endstyle %}
+
+
+<div class="section-{{ section.id }}-padding main-banner-cards" data-aos="{{ settings.aos_effect }}">
+    <div class="{{ section.settings.container_type }} section-{{ section.id }}">
+  <div class="banner-cards-wrapper">
+
+      <!-- Card 1 -->
+      <div class="banner-card first-banner custom-hover image-animation shades-animation">
+        {% if section.settings.image_1 != blank %}
+          <a href="{{ section.settings.image_1_link }}" class="banner-image">
+            <img src="{{ section.settings.image_1 | img_url: 'master' }}" alt="" width="" height="" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="banner-card-content">
+          <p class="label">{{ section.settings.label_1 }}</p>
+          <h2>{{ section.settings.title_1 }}</h2>
+          <div>
+          <a class="button button-hover-style" href="{{ section.settings.button_1_link }}">
+            {{ section.settings.button_1_text }}
+          </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-card">
+      <!-- Card 2 -->
+      <div class="banner-card second-banner custom-hover image-animation shades-animation">
+        {% if section.settings.image_2 != blank %}
+          <a href="{{ section.settings.image_2_link }}" class="banner-image">
+            <img src="{{ section.settings.image_2 | img_url: 'master' }}" alt="" width="" height="" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="banner-card-content">
+          <p class="label">{{ section.settings.label_2 }}</p>
+          <h2>{{ section.settings.title_2 }}</h2>
+          <div>
+          <a class="button button-hover-style" href="{{ section.settings.button_2_link }}">
+            {{ section.settings.button_2_text }}
+          </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="banner-card third-banner custom-hover image-animation shades-animation">
+        {% if section.settings.image_3 != blank %}
+          <a href="{{ section.settings.image_3_link }}" class="banner-image">
+            <img src="{{ section.settings.image_3 | img_url: 'master' }}" alt="" width="" height="" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="banner-card-content">
+          <p class="label">{{ section.settings.label_3 }}</p>
+          <h2>{{ section.settings.title_3 }}</h2>
+          <div>
+          <a class="button button-hover-style" href="{{ section.settings.button_3_link }}">
+            {{ section.settings.button_3_text }}
+          </a>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </div>
+</div>
+</div>
+
+
+{% schema %}
+{
+  "name": "TT Banner",
+  "settings": [
+    {
+      "type": "select",
+      "id": "container_type",
+      "label": "Container width",
+      "default": "container--large",
+      "options": [
+        {
+          "value": "container",
+          "label": "Contained (Default)"
+        },
+        {
+          "value": "container--large",
+          "label": "Large container"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_1_url",
+      "label": "Image link"
+    },
+    {
+      "type": "text",
+      "id": "label_1",
+      "label": "Top label text"
+    },
+    {
+      "type": "textarea",
+      "id": "title_1",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Card 1 Colors"
+    },
+    {
+      "type": "color",
+      "id": "card1_label_color",
+      "label": "Label color",
+      "default": "#EF8F75"
+    },
+    {
+      "type": "color",
+      "id": "card1_heading_color",
+      "label": "Heading color",
+      "default": "#34373F"
+    },
+    {
+      "type": "color",
+      "id": "card1_button_bg",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card1_button_text",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card1_button_bg_hover",
+      "label": "Button hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card1_button_text_hover",
+      "label": "Button hover text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_2_url",
+      "label": "Image link"
+    },
+    {
+      "type": "text",
+      "id": "label_2",
+      "label": "Top label text"
+    },
+    {
+      "type": "textarea",
+      "id": "title_2",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Card 2 Colors"
+    },
+    {
+      "type": "color",
+      "id": "card2_label_color",
+      "label": "Label color",
+      "default": "#EF8F75"
+    },
+    {
+      "type": "color",
+      "id": "card2_heading_color",
+      "label": "Heading color",
+      "default": "#34373F"
+    },
+    {
+      "type": "color",
+      "id": "card2_button_bg",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card2_button_text",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card2_button_bg_hover",
+      "label": "Button hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card2_button_text_hover",
+      "label": "Button hover text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_3_url",
+      "label": "Image link"
+    },
+    {
+      "type": "text",
+      "id": "label_3",
+      "label": "Top label text"
+    },
+    {
+      "type": "textarea",
+      "id": "title_3",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "button_3_text",
+      "label": "Button text"
+    },
+    {
+      "type": "url",
+      "id": "button_3_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Card 3 Colors"
+    },
+    {
+      "type": "color",
+      "id": "card3_label_color",
+      "label": "Label color",
+      "default": "#EF8F75"
+    },
+    {
+      "type": "color",
+      "id": "card3_heading_color",
+      "label": "Heading color",
+      "default": "#34373F"
+    },
+    {
+      "type": "color",
+      "id": "card3_button_bg",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card3_button_text",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card3_button_bg_hover",
+      "label": "Button hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card3_button_text_hover",
+      "label": "Button hover text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT Banner",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

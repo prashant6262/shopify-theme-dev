@@ -1,0 +1,229 @@
+{% style %}
+   .section-{{ section.id }}-padding .hero-box-content h2 {
+   color: {{ section.settings.heading_color }};
+   }
+
+   .section-{{ section.id }}-padding .hero-badge {
+  background: {{ section.settings.badge_bg_color }};
+     color: {{ section.settings.badge_text_color }};
+   }
+
+     .card--{{ section.id }} .button {
+        border-radius: {{ section.settings.btn_border_radius }}px;
+             background-color: {{ section.settings.button_bg }};
+          color: {{ section.settings.button_text }};
+      }
+              .card--{{ section.id }} .button::before {
+          background-color: {{ section.settings.button_bg_hover }};
+        }
+         .card--{{ section.id }} .button:Hover{
+        color: {{ section.settings.button_text_hover }};
+         }
+   .section-{{ section.id }}-padding {
+               padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+               padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+             }
+              @media screen and (min-width: 750px) {
+               .section-{{ section.id }}-padding {
+                 padding-top: {{ section.settings.padding_top }}px;
+                 padding-bottom: {{ section.settings.padding_bottom }}px;
+               }
+             }
+{% endstyle %}
+
+<div class="section-{{ section.id }}-padding main-hero-tax" data-aos="{{ settings.aos_effect }}">
+  <div class="container">
+    <div class="banner-card hero-box-banner custom-hover image-animation card--{{ section.id }}">
+      <div class="banner-image">
+        {% if section.settings.bg_image != blank %}
+          <img
+            src="{{ section.settings.bg_image | img_url: 'master' }}"
+            width=""
+            height=""
+            loading="lazy"
+            alt="{{ section.settings.heading }}"
+          >
+
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+
+      <div class="hero-box-wrapper">
+        <div class="border-box">
+        <div class="hero-box-content">
+          {% if section.settings.heading != blank %}
+            <h2>{{ section.settings.heading }}</h2>
+          {% endif %}
+
+          {% if section.settings.badge_text != blank %}
+            <a href="{{ section.settings.badge_url }}" class="hero-badge">
+              {{ section.settings.badge_text }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.button_label != blank %}
+            <div>
+              <a
+                href="{{ section.settings.button_link }}"
+                class="button button-hover-style hero-btn"
+              >
+                {{ section.settings.button_label }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  {% for block in section.blocks %}
+  {% case block.type %}
+    {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+{% endfor %}
+</div>
+
+
+{% schema %}
+{
+  "name": "Hero Box Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Decoration Your Home"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "All New Gorgeous Collection Of 2024"
+    },
+    {
+      "type": "url",
+      "id": "badge_url",
+      "label": "Badge url"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+      {
+    "type": "range",
+    "id": "btn_border_radius",
+    "label": "Banner Button Radius",
+    "min": 0,
+    "max": 50,
+    "step": 2,
+    "default": 50,
+    "unit": "px"
+  },
+  {
+  "type": "color",
+  "id": "button_bg",
+  "label": "Button background color",
+  "default": "#000000"
+},
+{
+  "type": "color",
+  "id": "button_text",
+  "label": "Button text color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_bg_hover",
+  "label": "Button hover background color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_text_hover",
+  "label": "Button hover text color",
+  "default": "#fff"
+},
+  
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background color",
+      "default": "#ff8c6b"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+"blocks": [
+  {
+    "type": "@app"
+  }
+],
+ "presets": [
+  {
+    "name": "Hero Box Banner",
+    "category": "Hero",
+    "settings": {
+      "heading": "Decorate Your Home",
+      "badge_text": "All New Gorgeous Collection Of 2024",
+      "button_label": "Shop Now",
+      "padding_top": 36,
+      "padding_bottom": 36
+    }
+  }
+]
+
+}
+{% endschema %}

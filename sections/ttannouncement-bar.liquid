@@ -1,0 +1,226 @@
+{%- style -%}
+.section-{{ section.id }} .ttannouncement-bar,
+.section-{{ section.id }} .topbar-close {
+  background-color: {{ section.settings.bg_color }};
+}
+.section-{{ section.id }} .slide-text {
+  color: {{ section.settings.text_color }};
+}
+.nav-slide .marquee-slide::after {
+  background-color: {{ section.settings.text_color }};
+}
+{%- endstyle -%}
+
+<div class="nav-slide section-{{ section.id }}">
+  <div class="topbar-close" role="button" aria-label="Close">
+    <svg xmlns="https://www.w3.org/2000/svg" class="icon icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </div>
+
+  <div class="ttannouncement-bar">
+    <div class="marquee-content">
+     {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text_slide' %}
+        <div class="marquee-slide">
+          <a href="{{ block.settings.text_url }}">
+          <div class="slide-text">
+            <div class="header-top-title">{{ block.settings.text }}</div>
+          </div>
+          </a>
+        </div>
+
+         <div class="marquee-slide">
+          <a href="{{ block.settings.text_url }}">
+          <div class="slide-text">
+            <div class="header-top-title">{{ block.settings.text }}</div>
+          </div>
+          </a>
+        </div>
+       {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .nav-slide {
+    position: relative;
+    transition: max-height 0.6s ease, opacity 0.6s ease, padding 0.6s ease;
+    z-index: 999;
+    overflow: hidden;
+    max-height: 500px;
+  }
+
+  .slide-up-close {
+    max-height: 0 !important;
+    transition: max-height 0.6s ease, opacity 0.6s ease, padding 0.6s ease;
+  }
+
+  .topbar-close {
+    position: absolute;
+    top: 0.7rem;
+    right: 0;
+    z-index: 5;
+    padding: 1rem 2rem;
+    cursor: pointer;
+  }
+
+  .topbar-close svg {
+    stroke: #fff;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .ttannouncement-bar {
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .marquee-content {
+    display: inline-flex;
+    animation: marquee-scroll linear infinite;
+    animation-duration: {{ section.settings.scroll_duration | default: 40 }}s;
+  }
+
+  .ttannouncement-bar:hover .marquee-content {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-slide a{
+       text-decoration: none;
+  }
+  .marquee-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    padding: 1.4rem 0;
+    position: relative;
+    margin-right: 0;
+    white-space: nowrap;
+  }
+
+  .marquee-slide::after {
+    content: '';
+    position: absolute;
+    right: -0.8rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+  }
+
+  .header-top-title {
+    padding: 0 6rem;
+    text-transform: capitalize;
+  }
+
+  @media (max-width: 600px) {
+    .header-top-title {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (max-width: 423px) {
+    .header-top-title {
+      padding: 0 1rem;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .header-top-title {
+      font-size: 1.3rem;
+    }
+    .topbar-close {
+      padding: 1rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const closeBtn = document.querySelector('.topbar-close');
+    const bar = document.querySelector('.nav-slide');
+
+    if (closeBtn && bar) {
+      closeBtn.addEventListener('click', () => {
+        bar.classList.add('slide-up-close');
+        setTimeout(() => {
+          bar.style.display = 'none';
+        }, 600);
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "TTannouncementBar",
+  "tag": "section",
+  "class": "section-text-slider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#645832"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "range",
+      "id": "scroll_duration",
+      "label": "Marquee Scroll Duration (s)",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_slide",
+      "name": "Text Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Slide Text",
+          "default": "Example Slide Text"
+        },{
+          "type": "url",
+          "id": "text_url",
+          "label": "Slide URL"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TTannouncementBar",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+

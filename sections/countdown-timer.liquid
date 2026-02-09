@@ -1,0 +1,292 @@
+{%- style -%}
+  .countdown-timer {
+    background-color: {{ section.settings.bg_color }};
+     background-image: url({{ section.settings.bg_image | img_url: "master" }});
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+   .countdown-timer h2.timer-section-heading{
+      color:{{section.settings.heading_color}};
+  }
+  .countdown-timer p, .countdown-timer .countdown-item h1#seconds{
+       color:{{section.settings.text_color}};
+       margin:0;
+     }
+  .countdown-timer .countdown-item, .countdown-timer .countdown-item h1, .countdown-box span{
+    color:{{section.settings.countdown_date_color}};
+  }
+  .countdown-timer .countdown-item p{
+      color:var(--body-text-color);
+        margin: 0;
+  }
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="section-{{ section.id }}-padding">
+  <div class="countdown-timer" data-aos="{{ settings.aos_effect }}">
+    <div class="countdown-timer-inner">
+      <div class="left-image">
+        {% if section.settings.image != blank %}
+          <img
+            src="{{ section.settings.image | img_url: 'master' }}"
+            alt="{{ section.settings.heading }}"
+            class="left-main-img"
+            loading="lazy"
+            width=""
+            height=""
+          >
+          {% else %}
+              {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+
+      <div class="inner-countdown-timer">
+        <div>
+          {% if section.settings.subtitle != blank %}
+            <p class="{{ section.settings.text_style }}">
+              {{ section.settings.subtitle | escape }}
+            </p>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            <h2 class="timer-section-heading">{{ section.settings.heading }}</h2>
+          {% endif %}
+        </div>
+
+        <div class="countdown-box" id="countdown">
+          <div class="countdown-item">
+            <h1 id="days">00</h1>
+            <p>{{ 'general.countdown-timer.days' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="hours">00</h1>
+            <p>{{ 'general.countdown-timer.hours' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="minutes">00</h1>
+            <p>{{ 'general.countdown-timer.min' | t }}</p>
+          </div>
+          <span>:</span>
+          <div class="countdown-item">
+            <h1 id="seconds">00</h1>
+            <p>{{ 'general.countdown-timer.sec' | t }}</p>
+          </div>
+        </div>
+
+        <div class="countdown-text-button">
+          <div class="button-bottom">
+            {%- if section.settings.button_label != blank -%}
+              <a
+                href="{{ section.settings.button_link }}"
+                class="button button-hover-style"
+                {{ section.shopify_attributes }}
+              >
+                {{ section.settings.button_label | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- if section.blocks != blank -%}
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  {%- endif -%}
+</section>
+
+<script>
+  // Countdown Timer section js start
+  function startCountdown(endTime) {
+    function updateTimer() {
+      let now = new Date().getTime();
+      let timeLeft = new Date(endTime).getTime() - now;
+
+      if (timeLeft > 0) {
+        let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerText = days;
+        document.getElementById('hours').innerText = hours;
+        document.getElementById('minutes').innerText = minutes;
+        document.getElementById('seconds').innerText = seconds;
+      } else {
+        document.getElementById('countdown').innerHTML = '<p>Offer Expired!</p>';
+      }
+    }
+    setInterval(updateTimer, 1000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    let countdownEndDate = '{{ section.settings.end_date }}';
+    startCountdown(countdownEndDate);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Countdown Timer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F6F1E7"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+      "info": "image size width 1903 width X 750 height"
+    },
+    {
+      "type": "header",
+      "content": "Right Side Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Left Image",
+      "info": "image size width 665 width X 500 height"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Best From Collections",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "options": [
+        {
+          "value": "subtitle",
+          "label": "subtitle"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "uppercase",
+      "label": "Text style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "subtitle Color",
+      "default": "#C6A87D"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Black Friday"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Shop Now",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+
+    {
+      "type": "header",
+      "content": "Date Settings"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Countdown End Date (YYYY-MM-DD HH:MM:SS)",
+      "default": "2025-12-31 23:59:59"
+    },
+
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Text Heading Color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "countdown_date_color",
+      "label": "Countdown Date Color",
+      "default": "#222"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown Timer",
+      "settings": {
+        "bg_color": "#C55626",
+        "heading": "Black Friday Sale",
+        "end_date": "2025-12-31 23:59:59",
+        "button_label": "Shop Now",
+        "heading_color": "#ffffff",
+        "countdown_date_color": "#ffffff",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  ]
+}
+{% endschema %}

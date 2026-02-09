@@ -1,0 +1,181 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+   <div class="account-contain">
+     {% if section.settings.show_account_image %}
+       <div class="account__col small-hide medium-hide">
+      {% if section.settings.register_image != blank %}
+        <div class="account__image">
+          <img src="{{ section.settings.register_image | img_url:"master" }}" alt="account image"/>
+        </div>
+      {% endif %}
+      </div>
+      {% endif %}
+     <div class="detail-forms">
+    <div class="customer register main-bg-style">
+  <h1 class="center">
+    {{ 'customer.register.title' | t }}
+  </h1>
+  {%- form 'create_customer', novalidate: 'novalidate' -%}
+
+    <div class="register-form">
+  <div class="register-account">
+    <label for="RegisterForm-FirstName">
+        {{ 'customer.register.first_name_label' | t }}
+      </label>
+    <div class="field">
+      <input
+        type="text"
+        name="customer[first_name]"
+        id="RegisterForm-FirstName"
+        {% if form.first_name %}
+          value="{{ form.first_name }}"
+        {% endif %}
+        autocomplete="given-name"
+        placeholder="{{ 'customer.register.first_name' | t }}"
+      >
+    </div>
+    </div>
+      <div class="register-account">
+       <label for="RegisterForm-LastName">
+        {{ 'customer.register.last_name_label' | t }}
+      </label>
+    <div class="field">
+      <input
+        type="text"
+        name="customer[last_name]"
+        id="RegisterForm-LastName"
+        {% if form.last_name %}
+          value="{{ form.last_name }}"
+        {% endif %}
+        autocomplete="family-name"
+        placeholder="{{ 'customer.register.last_name' | t }}"
+      >
+    </div>
+    </div>
+    </div>
+     <label for="RegisterForm-email">
+        {{ 'customer.register.email_label' | t }}
+      </label>
+    <div class="field">
+      <input
+        type="email"
+        name="customer[email]"
+        id="RegisterForm-email"
+        {% if form.email %}
+          value="{{ form.email }}"
+        {% endif %}
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="email"
+        aria-required="true"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="RegisterForm-email-error"
+        {% endif %}
+        placeholder="{{ 'customer.register.email' | t }}"
+      >
+    </div>
+    {%- if form.errors contains 'email' -%}
+      <span id="RegisterForm-email-error" class="form__message">
+        {{ form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email }}
+      </span>
+    {%- endif -%}
+    
+     <label for="RegisterForm-password">
+        {{ 'customer.register.password_label' | t }}
+      </label>
+    <div class="field">
+      <input
+        type="password"
+        name="customer[password]"
+        id="RegisterForm-password"
+        aria-required="true"
+        {% if form.errors contains 'password' %}
+          aria-invalid="true"
+          aria-describedby="RegisterForm-password-error"
+        {% endif %}
+        placeholder="{{ 'customer.register.password' | t }}"
+      >
+    </div>
+    {%- if form.errors contains 'password' -%}
+      <span id="RegisterForm-password-error" class="form__message">
+        {{ form.errors.translated_fields.password | capitalize }}
+        {{ form.errors.messages.password }}.
+      </span>
+    {%- endif -%}
+    <button class="button--full-width button button-style button-hover-style">
+      {{ 'customer.register.submit' | t }}
+    </button>
+
+    <div class="form-customer__callout center">
+        <h2>{{ 'customer.register.account_already' | t }}</h2>
+     <div>
+       <a href="{{ routes.account_login_url }}" class="account-text button button--small button-hover-style">{{ 'customer.register.account__login' | t }}</a>
+     </div>
+    </div>
+    
+  {%- endform -%}
+</div>
+     </div>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-register.name",
+  "settings": [
+     {
+      "type": "checkbox",
+      "id": "show_account_image",
+      "label": "Show Register Image",
+      "default": true
+    },
+     {
+      "type": "image_picker",
+      "id": "register_image",
+      "label": "Upload Image",
+        "info": "image size is 600 width X 600 height"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

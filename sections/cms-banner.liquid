@@ -1,0 +1,614 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<style>
+  .main-cms-banner .cms-banner .subbanner-parent .content2{
+     background: {{section.settings.banner_bg_color}};
+    }
+    .main-cms-banner .cms-banner .banner .banner-content1 .title {color: {{section.settings.banner1_title_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content2 .title {color: {{section.settings.banner2_title_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content1 .subtitle {color: {{section.settings.banner1_subtitle_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content2 .subtitle {color: {{section.settings.banner2_subtitle_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content3 .subtitle {color: {{section.settings.banner3_subtitle_color }};}
+     .main-cms-banner .cms-banner .banner.banner2 .banner-content3 .title {color: {{section.settings.banner3_title_color }};}
+      .main-cms-banner .cms-banner .banner .banner-content4 .title {
+       color: {{section.settings.banner4_title_color }};
+    }
+    .main-cms-banner .cms-banner .banner .banner-content1 .desc {color: {{section.settings.banner1_desc_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content2 .desc {color: {{section.settings.banner2_desc_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content3 .desc {color: {{section.settings.banner3_desc_color }};}
+    .main-cms-banner .cms-banner .banner .banner-content4 .desc {color: {{section.settings.banner4_desc_color }};}
+
+    .main-cms-banner .cms-banner .banner .banner-content1 .btn1{color: {{section.settings.btn1_txt_color }};background: {{ section.settings.btn1_bg_color }}; transition: .5s color, background .5s;}
+    .main-cms-banner .cms-banner .banner .banner-content1 .btn1:hover{
+      color: {{section.settings.btn1_hovertxt_color }};
+      background: {{ section.settings.btn1_hoverbg_color }};
+      transition: .5s color, background .5s;
+    }
+    .main-cms-banner .cms-banner .banner .banner-content2 .btn2{color: {{section.settings.btn2_txt_color }};background: {{ section.settings.btn2_bg_color }}; transition: .5s color, background .5s;}
+    .main-cms-banner .cms-banner .banner .banner-content2 .btn2:hover{
+      color: {{section.settings.btn2_hovertxt_color }};
+      background: {{ section.settings.btn2_hoverbg_color }};
+      transition: .5s color, background .5s;
+    }
+    .main-cms-banner .cms-banner .banner .banner-content3 .btn3{color: {{section.settings.btn3_txt_color }};background: {{ section.settings.btn3_bg_color }}; transition: .5s color, background .5s;}
+    .main-cms-banner .cms-banner .banner .banner-content3 .btn3:hover{
+      color: {{section.settings.btn3_hovertxt_color }};
+      background: {{ section.settings.btn3_hoverbg_color }};
+      transition: .5s color, background .5s;
+    }
+
+    .main-cms-banner .cms-banner .banner .banner-content .btn4{color: {{section.settings.btn4_txt_color }};background: {{ section.settings.btn4_bg_color }}; transition: .5s color, background .5s;}
+    .main-cms-banner .cms-banner .banner .banner-content .btn4:hover{
+      color: {{section.settings.btn4_hovertxt_color }};
+         background: {{ section.settings.btn4_hoverbg_color }};
+         transition: .5s color, background .5s;
+    }
+</style>
+
+<div class="section-{{ section.id }}-padding main-cms-banner">
+  <div class="cms-banner right-to-left">
+    <div class="banner banner1 col-sm-6 col-xs-6 shades-animation">
+      {% if section.settings.banner1_img != blank %}
+        <a
+          class="banner-image image-animation"
+          href="{% if section.settings.banner1_url != blank %}{{ section.settings.banner1_url }}{% else %}#{% endif %}"
+        >
+          <img
+            src="{{ section.settings.banner1_img | img_url:"master" }}"
+            alt="banner1"
+            width=""
+            height=""
+            loading="lazy"
+          >
+        </a>
+        <div class="banner-content banner-content1 {{ section.settings.text1_position }}">
+          <div class="banner-inner">
+            {% if section.settings.banner1_desc != blank %}
+              <div class="desc">{{ section.settings.banner1_desc }}</div>
+            {% endif %}
+            {% if section.settings.banner1_title != blank %}
+              <h2 class="title">{{ section.settings.banner1_title }}</h2>
+            {% endif %}
+            {% if section.settings.banner1_btn != blank %}
+              <div>
+                <a href="{{ section.settings.banner1_btn_url }}" class="btn1 btn">{{ section.settings.banner1_btn }}</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="banner banner2 col-sm-6 col-xs-6">
+      <div class="shades-animation content1 col-sm-12 col-xs-12">
+        {% if section.settings.banner2_img != blank %}
+          <a
+            class="banner-image image-animation"
+            href="{% if section.settings.banner2_url != blank %}{{ section.settings.banner2_url }}{% else %}#{% endif %}"
+          >
+            <img
+              src="{{ section.settings.banner2_img | img_url:"master" }}"
+              alt="banner2"
+              width=""
+              height=""
+              loading="lazy"
+            >
+          </a>
+
+          <div class="banner-content banner-content2 {{ section.settings.text2_position }}">
+            <div class="banner-inner">
+              {% if section.settings.banner2_desc != blank %}
+                <div class="desc">{{ section.settings.banner2_desc }}</div>
+              {% endif %}
+              {% if section.settings.banner2_title != blank %}
+                <h2 class="title">{{ section.settings.banner2_title }}</h2>
+              {% endif %}
+              {% if section.settings.banner2_btn != blank %}
+                <div>
+                  <a href="{{ section.settings.banner2_btn_url }}" class="btn2 btn">
+                    {{- section.settings.banner2_btn -}}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="subbanner-parent banner">
+        <div class="banner-content banner-content3 content2 {{ section.settings.text3_position }}">
+            
+              {% if section.settings.banner3_img != blank %}
+                <img
+                  src="{{ section.settings.banner3_img | img_url:"master" }}"
+                  alt="banner3"
+                  width=""
+                  height=""
+                  loading="lazy"
+                >
+              {% endif %}
+           
+         
+              {% if section.settings.banner3_desc != blank %}
+                <div class="desc">{{ section.settings.banner3_desc }}</div>
+              {% endif %}
+              {% if section.settings.banner3_title != blank %}
+                <h2 class="title">{{ section.settings.banner3_title }}</h2>
+              {% endif %}
+
+              {% if section.settings.banner3_btn != blank %}
+                <div>
+                  <a href="{{ section.settings.banner3_url }}" class="btn3 btn">{{ section.settings.banner3_btn }}</a>
+                </div>
+              {% endif %}
+             
+         </div>
+
+
+        <div class="banner-con-4 col-sm-6 col-xs-6 shades-animation">
+          {% if section.settings.banner4_img != blank %}
+       
+              <a
+                class="banner-image image-animation"
+                href="{% if section.settings.banner4_url != blank %}{{ section.settings.banner4_url }}{% else %}#{% endif %}"
+              >
+                <img
+                  width=""
+                  height=""
+                  loading="lazy"
+                  src="{{ section.settings.banner4_img | img_url:"master" }}"
+                  alt="banner4"
+                >
+              </a>
+           
+            <div class="banner-content banner-content4 {{ section.settings.text4_position }}">
+              <div class="banner-inner">
+                {% if section.settings.banner4_desc != blank %}
+                  <div class="desc">{{ section.settings.banner4_desc }}</div>
+                {% endif %}
+                {% if section.settings.banner4_title != blank %}
+                  <h2 class="title">{{ section.settings.banner4_title }}</h2>
+                {% endif %}
+
+                <div>
+                  {% if section.settings.banner4_btn != blank %}
+                    <a href="{{ section.settings.banner4_btn_url }}" class="btn4 btn">
+                      {{- section.settings.banner4_btn -}}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CMS Banner",
+  "class": "index-section cmsbanner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner1 Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner1_img",
+      "label": "Banner1 image"
+    },
+    {
+      "type": "url",
+      "id": "banner1_url",
+      "label": "Banner1 url"
+    },
+    {
+      "type": "select",
+      "id": "text1_position",
+      "label": "Text Position",
+      "default": "right",
+      "options": [
+        {
+          "value": "left",
+          "label": "left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "banner1_title",
+      "label": "Banner1 title",
+      "default": "Holiday Deals On Home Decor Items 30% Off"
+    },
+    {
+      "type": "color",
+      "id": "banner1_title_color",
+      "label": "Banner1 title color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner1_desc",
+      "label": "Banner1 Description",
+      "default": "ON LATEST COLLECTION"
+    },
+    {
+      "type": "color",
+      "id": "banner1_desc_color",
+      "label": "Banner1 Description color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner1_btn",
+      "label": "Banner Button",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner1_btn_url",
+      "label": "Banner1 Link Button"
+    },
+
+    {
+      "type": "color",
+      "id": "btn1_txt_color",
+      "label": "Button Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "btn1_bg_color",
+      "label": "Button Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn1_hovertxt_color",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn1_hoverbg_color",
+      "label": "Button Hover Background Color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Banner2 Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner2_img",
+      "label": "Banner2 image"
+    },
+    {
+      "type": "url",
+      "id": "banner2_url",
+      "label": "Banner2 url"
+    },
+    {
+      "type": "select",
+      "id": "text2_position",
+      "label": "Text Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "banner2_title",
+      "label": "Banner2 title",
+      "default": "The Wood Table Interior Design"
+    },
+    {
+      "type": "color",
+      "id": "banner2_title_color",
+      "label": "Banner2 title color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner2_desc",
+      "label": "Banner2 Description",
+      "default": "SNEAKERS & FLATS"
+    },
+    {
+      "type": "color",
+      "id": "banner2_desc_color",
+      "label": "Banner2 Description color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner2_btn",
+      "label": "Banner Button",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner2_btn_url",
+      "label": "Banner2 Link Button"
+    },
+
+    {
+      "type": "color",
+      "id": "btn2_txt_color",
+      "label": "Button Text Color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "btn2_bg_color",
+      "label": "Button Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn2_hovertxt_color",
+      "label": "Button Hover Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn2_hoverbg_color",
+      "label": "Button Hover Background Color",
+      "default": "#222"
+    },
+    {
+      "type": "header",
+      "content": "Banner3 Settings"
+    },
+    {
+      "type": "color",
+      "id": "banner_bg_color",
+      "label": "Banner Bakcground Color",
+      "default": "#43766c"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "banner3_img",
+      "label": "Banner3 image"
+    },
+    {
+      "type": "select",
+      "id": "text3_position",
+      "label": "Text Position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "banner3_title",
+      "label": "Banner3 title",
+      "default": "Get Save up to 35%"
+    },
+    {
+      "type": "color",
+      "id": "banner3_title_color",
+      "label": "Banner3 title color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner3_desc",
+      "label": "Banner3 Description",
+      "default": "BLACK FRIDAY SEASON"
+    },
+    {
+      "type": "color",
+      "id": "banner3_desc_color",
+      "label": "Banner3 Description color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner3_btn",
+      "label": "Banner Button",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner3_url",
+      "label": "Button url"
+    },
+    {
+      "type": "color",
+      "id": "btn3_txt_color",
+      "label": "Button Text Color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "btn3_bg_color",
+      "label": "Button Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn3_hovertxt_color",
+      "label": "Button Hover Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn3_hoverbg_color",
+      "label": "Button Hover Background Color",
+      "default": "#222"
+    },
+    {
+      "type": "header",
+      "content": "Banner4 Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner4_img",
+      "label": "Banner4 image"
+    },
+    {
+      "type": "url",
+      "id": "banner4_url",
+      "label": "Banner4 url"
+    },
+    {
+      "type": "select",
+      "id": "text4_position",
+      "label": "Text Position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "banner4_title",
+      "label": "Banner4 title",
+      "default": "Branding Lights"
+    },
+    {
+      "type": "color",
+      "id": "banner4_title_color",
+      "label": "Banner4 title color",
+      "default": "#fff"
+    },
+
+    {
+      "type": "text",
+      "id": "banner4_desc",
+      "label": "Banner4 Description",
+      "default": "BEST COLLECTION"
+    },
+    {
+      "type": "color",
+      "id": "banner4_desc_color",
+      "label": "Banner4 Description color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "banner4_btn",
+      "label": "Banner Button",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner4_btn_url",
+      "label": "Banner4 Link Button"
+    },
+
+    {
+      "type": "color",
+      "id": "btn4_txt_color",
+      "label": "Button Text Color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "btn4_bg_color",
+      "label": "Button Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn4_hovertxt_color",
+      "label": "Button Hover Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "btn4_hoverbg_color",
+      "label": "Button Hover Background Color",
+      "default": "#222"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "CMS Banner",
+      "category": "TT CMS section"
+    }
+  ]
+}
+{% endschema %}

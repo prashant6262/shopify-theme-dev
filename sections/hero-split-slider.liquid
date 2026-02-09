@@ -1,0 +1,384 @@
+{%- style -%}
+  .section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+  }
+      .section-{{ section.id }} .swiper-button-prev:after, .section-{{ section.id }} .swiper-button-next:after{
+        color:{{ section.settings.navigation_color }};
+    }
+   {% for block in section.blocks %}
+    .hero-split--{{ block.id }} .hero-label {
+        color: {{ block.settings.label_color }};
+    }
+    .hero-split--{{ block.id }} .hero-heading {
+        color: {{ block.settings.heading_color }};
+    }
+
+     .hero-split--{{ block.id }} .button {
+        border-radius: {{ block.settings.btn_border_radius }}px;
+        padding: 0 3px;
+             background-color: {{ block.settings.button_bg }};
+          color: {{ block.settings.button_text_color }};
+      }
+              .hero-split--{{ block.id }} .button::before {
+          background-color: {{ block.settings.button_bg_hover }};
+        }
+         .hero-split--{{ block.id }} .button:Hover{
+        color: {{ block.settings.button_text_hover }};
+         }
+    {% endfor %}
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+        padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      }
+
+  @media screen and (min-width: 750px) {
+        .section-{{ section.id }}-padding {
+          padding-top: {{ section.settings.padding_top }}px;
+          padding-bottom: {{ section.settings.padding_bottom }}px;
+        }
+      }
+{%- endstyle -%}
+
+<section class="section-{{ section.id }}-padding" data-aos="fade-up">
+  <div class="hero-split-swiper section-{{ section.id }}">
+    <div class="{{ section.settings.container_site }}">
+      <div class="swiper {{ section.id }}--hero-split-slider">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide hero-split--{{ block.id }}" {{ block.shopify_attributes }}>
+              <div class="hero-wrapper {{ block.settings.layout_direction }}">
+                <div class="hero-content {{ block.settings.text_alignment }}">
+                  {% if block.settings.label != blank %}
+                    <div class="hero-label">{{ block.settings.label }}</div>
+                  {% endif %}
+
+                  {% if block.settings.heading != blank %}
+                    <h2 class="hero-heading">{{ block.settings.heading }}</h2>
+                  {% endif %}
+
+                  {% if block.settings.button_text != blank %}
+                    <div>
+                    <a href="{{ block.settings.button_link }}" class="button button-hover-style">
+                      {{ block.settings.button_text }}
+                    </a>
+                    </div>
+                  {% endif %}
+                  
+                </div>
+
+                <div class="hero-image">
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | img_url:"master" }}"
+                      alt="{{ block.settings.heading }}"
+                      width=""
+                      height=""
+                      loading="lazy"
+                    >
+                    {% else %}
+                    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+       
+    
+      </div>
+    </div>
+     {% if section.settings.show_navigation %}
+        <div class="swiper-button-prev hero-split-slider-prev-{{ section.id }}"></div>
+        <div class="swiper-button-next hero-split-slider-next-{{ section.id }}"></div>
+        {% endif %}
+  </div>
+</section>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  new Swiper('.{{ section.id }}--hero-split-slider', {
+    slidesPerView: 1,
+    loop: true,
+    speed: {{ section.settings.slider_speed }},
+    navigation: {{ section.settings.show_navigation | json }} ? {
+      nextEl: '.hero-split-slider-next-{{ section.id }}',
+      prevEl: '.hero-split-slider-prev-{{ section.id }}'
+    } : false,
+      autoplay: {{ section.settings.enable_autoplay | json }} ? {
+      delay: {{ section.settings.autoplay_delay }},
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true
+    } : false
+  });
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Hero Split Slider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#d8c1b2"
+    },
+        {
+          "type": "select",
+          "id": "container_site",
+          "label": "Container Width",
+          "default": "page-width",
+          "options": [
+            { "value": "page-width", "label": "Page Width" },
+            { "value": "container", "label": "Container" },
+            { "value": "full-width", "label": "Full Width" }
+          ]
+        },
+     {
+      "type": "header",
+      "content": "Slider"
+    },
+     {
+          "type": "color",
+          "id": "navigation_color",
+          "label": "Navigation Color",
+          "default": "#fff"
+        },
+            {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slider_speed",
+      "label": "Slider transition speed (ms)",
+      "min": 300,
+      "max": 2000,
+      "step": 100,
+      "default": 900
+    },
+    {
+        "type": "checkbox",
+        "id": "enable_autoplay",
+        "label": "Enable autoplay",
+        "default": true
+    },
+     {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 1000,
+      "max": 6000,
+      "step": 100,
+      "label": "Autoplay delay (ms)",
+      "default": 3000
+    },
+
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Top Label",
+          "default": "FURNITURES FOR ROOMS, HALL & OFFICES"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "20% Offer on Few Selected Top Brands."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Right Image"
+        },
+    
+        {
+            "type": "select",
+            "id": "layout_direction",
+            "label": "Image & Text Order",
+            "default": "normal",
+            "options": [
+                {
+                "value": "normal",
+                "label": "Image Left / Text Right"
+                },
+                {
+                "value": "reverse",
+                "label": "Text Left / Image Right"
+                }
+            ]
+            },
+            {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "left",
+            "options": [
+                {
+                "value": "left",
+                "label": "Left"
+                },
+                {
+                "value": "center",
+                "label": "Center"
+                },
+                {
+                "value": "right",
+                "label": "Right"
+                }
+            ]
+            },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+
+        {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label Color",
+          "default": "#2f3a4f"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#2f3a4f"
+        },
+
+         {
+    "type": "range",
+    "id": "btn_border_radius",
+    "label": "Banner Button Radius",
+    "min": 0,
+    "max": 50,
+    "step": 2,
+    "default": 0,
+    "unit": "px"
+  },
+  {
+  "type": "color",
+  "id": "button_bg",
+  "label": "Button background color",
+  "default": "#000000"
+},
+{
+  "type": "color",
+  "id": "button_text_color",
+  "label": "Button text color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_bg_hover",
+  "label": "Button hover background color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_text_hover",
+  "label": "Button hover text color",
+  "default": "#fff"
+}
+      ]
+    }
+  ],
+ "presets": [
+  {
+    "name": "Hero Split Slider",
+    "category": "Hero",
+    "settings": {
+      "bg_color": "#d8c1b2",
+      "container_site": "page-width",
+      "show_navigation": true,
+      "enable_autoplay": true,
+      "autoplay_delay": 3000,
+      "slider_speed": 900,
+      "padding_top": 36,
+      "padding_bottom": 36
+    },
+    "blocks": [
+      {
+        "type": "slide",
+        "settings": {
+          "label": "FURNITURES FOR ROOMS, HALL & OFFICES",
+          "heading": "20% Offer on Few Selected Top Brands.",
+          "button_text": "Shop Now",
+          "layout_direction": "normal",
+          "text_alignment": "left",
+          "label_color": "#2f3a4f",
+          "heading_color": "#2f3a4f",
+          "btn_border_radius": 0,
+          "button_bg": "#000000",
+          "button_text_color": "#ffffff",
+          "button_bg_hover": "#ffffff",
+          "button_text_hover": "#000000"
+        }
+      },
+      {
+        "type": "slide",
+        "settings": {
+          "label": "NEW ARRIVALS 2025",
+          "heading": "Modern Furniture For Minimal Homes",
+          "button_text": "Explore Collection",
+          "layout_direction": "reverse",
+          "text_alignment": "left",
+          "label_color": "#2f3a4f",
+          "heading_color": "#2f3a4f",
+          "btn_border_radius": 0,
+          "button_bg": "#000000",
+          "button_text_color": "#ffffff",
+          "button_bg_hover": "#ffffff",
+          "button_text_hover": "#000000"
+        }
+      }
+    ]
+  }
+]
+
+}
+{% endschema %}

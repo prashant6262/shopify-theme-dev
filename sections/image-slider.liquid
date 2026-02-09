@@ -1,0 +1,371 @@
+{% style %}
+  .section-{{ section.id }}-padding {
+          padding-left: 2rem;
+        padding-right: 2rem;
+       padding-top: {{ section.settings.padding_top | times: 0.50 | round: 0 }}px;
+       padding-bottom: {{ section.settings.padding_bottom | times: 0.50 | round: 0 }}px;
+       background-color: {{ section.settings.bg_color }};
+       background-image: linear-gradient(
+            180deg, 
+            {{ section.settings.gradient_color_start }} 0%, 
+            {{ section.settings.gradient_color_end }} 100%
+          );
+     }
+      @media screen and (min-width: 768px) {
+       .section-{{ section.id }}-padding {
+         padding-top: {{ section.settings.padding_top }}px;
+         padding-bottom: {{ section.settings.padding_bottom }}px;
+             padding-left: 3rem;
+          padding-right: 3rem;
+       }
+       
+     }
+
+      {% for block in section.blocks %}
+         .slide--{{ block.id }} h2{
+        color:{{ block.settings.heading_color }};
+         }
+         .slide--{{ block.id }} h3{
+          color:{{ block.settings.subheading_color }};
+         }
+       .slide--{{ block.id }} .button.button--primary .svg-wrapper svg path, .slide--{{ block.id }} .button.button--primary  {
+          color:{{ block.settings.btn_text_color }};
+          fill:{{ block.settings.btn_text_color }};
+          border-bottom: .2rem solid {{ block.settings.btn_text_color }};
+       }
+         .slide--{{ block.id }} .button.button--primary:hover, .slide--{{ block.id }} .button.button--primary:hover .svg-wrapper svg path {
+          color:{{ block.settings.heading_hover_color }} !important;
+          fill:{{ block.settings.heading_hover_color }} !important;
+              border-bottom: .2rem solid {{ block.settings.heading_hover_color }};
+       }
+       .slide--{{ block.id }}. .button.button--secondary:before, .slide--{{ block.id }}. .button.button--secondary:after,
+         .slide--{{ block.id }}. .button.button--secondary:hover:before, .slide--{{ block.id }}. .button.button--secondary:hover:after{
+           border-color: {{block.settings.button_border_color}};
+          border: 0.1px solid {{block.settings.button_border_color}};
+          box-shadow: none;
+          right: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
+      }
+        .slide--{{ block.id }} .button.button--secondary {
+            background-color: {{ block.settings.button_bg_color }};
+            color: {{ block.settings.button_text_color }};
+          }
+          .slide--{{ block.id }} .button.button--secondary:hover {
+            background-color: {{ block.settings.button_bg_hover_color }} !important;
+            color: {{ block.settings.button_text_color_hover }};
+          }
+
+    {% endfor %}
+{% endstyle %}
+
+<div class="main-image-slider section-{{ section.id }}-padding">
+  <div class="slider--{{ section.id }}">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+  {% case block.type %}
+      {% when 'slide' %}
+        <div class="swiper-slide slide--{{ block.id }} shades-animation">
+          <div class="banner-image image-animation">
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | img_url: "master" }}"
+              alt="Slide Image"
+              class="mitti-slide-image"
+              width=""
+              height=""
+            >
+            {% else %}
+               {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+          <div class="mitti-slide-content" data-aos="{{ block.settings.aos_effect_sec }}">
+            {% if block.settings.subheading != blank %}
+                    <h3 class="subheading">{{ block.settings.subheading }}</h3>
+                  {% endif %}
+                     {% if block.settings.title != blank %}
+            <h2>{{ block.settings.title }}</h2>
+                {% endif %}
+
+            {% if block.settings.button_text != blank %}
+              <a
+                href="{{ block.settings.button_link }}"
+                class="button common-class-button button--secondary button-hover-style"
+              >
+                {{ block.settings.button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        </div>
+        {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+{% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  var swiper = new Swiper('.slider--{{ section.id }}', {
+  slidesPerView: {{ section.settings.slides_per_view }},
+    spaceBetween: {{ section.settings.space_between }},
+    loop: true,
+    speed: {{ section.settings.slider_speed }},
+    {% if section.settings.enable_autoplay %}
+    autoplay: {
+      delay: {{ section.settings.autoplay_delay }},
+      disableOnInteraction: false,
+    },
+    {% endif %} 
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+      },
+       600: {
+        slidesPerView: 2,
+        spaceBetween: 20,
+      },
+      768: {
+        slidesPerView: 2.3,
+        spaceBetween: 20,
+      },
+      1024: {
+         slidesPerView: {{ section.settings.slides_per_view }},
+    spaceBetween: {{ section.settings.space_between }},
+      },
+    },
+  });
+{% if section.settings.enable_autoplay %}
+  const swiperEl = document.querySelector('.slider--{{ section.id }}');
+  if (swiperEl && swiper.autoplay) {
+    swiperEl.addEventListener('mouseenter', () => swiper.autoplay.stop());
+    swiperEl.addEventListener('mouseleave', () => swiper.autoplay.start());
+  }
+  {% endif %}
+
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Image Slider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color"
+    },
+     {
+      "type": "color",
+      "id": "gradient_color_start",
+      "label": "Gradient Start Color",
+      "default": "#EBE6D7"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_end",
+      "label": "Gradient End Color",
+      "default": "#EBE6D700"
+    },
+    {
+      "type": "header",
+      "content": "Slider Setting"
+    },
+    {
+  "type": "range",
+  "id": "slides_per_view",
+  "label": "Slides per view (Desktop)",
+  "min": 1,
+  "max": 6,
+  "step": 0.5,
+  "default": 3
+},
+{
+  "type": "range",
+  "id": "space_between",
+  "label": "Space between slides (px)",
+  "min": 0,
+  "max": 100,
+  "step": 5,
+  "default": 30
+},
+{
+  "type": "checkbox",
+  "id": "enable_loop",
+  "label": "Enable loop",
+  "default": true
+},
+    {
+      "type": "number",
+      "id": "autoplay_delay",
+      "label": "Autoplay Delay (ms)",
+      "default": 3000
+    },
+      {
+      "type": "range",
+      "id": "slider_speed",
+      "label": "Slide transition speed (ms)",
+      "min": 100,
+      "max": 3000,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+ 
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+      "type": "select",
+      "id": "aos_effect_sec",
+      "label": "Section Animation",
+      "options": [
+        { "value": "fade-up", "label": "Fade Up" },
+        { "value": "fade-down", "label": "Fade Down" },
+        { "value": "zoom-in", "label": "Zoom In" },
+        { "value": "zoom-in-up", "label": "Zoom In Up" },
+        { "value": "fade-left", "label": "Fade Left" },
+        { "value": "fade-right", "label": "Fade Right" }
+      ],
+      "default": "fade-down"
+    },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image",
+          "info": "image size width 945px X 950px height"
+        },
+
+        {
+          "type": "header",
+          "content": "Section title settings"
+        },
+         {
+          "type": "text",
+          "id": "subheading",
+          "label": "Sub Heading",
+          "default": "Krafti Art? It’s A craft"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color",
+          "label": "Sub Heading Color",
+          "default": "#fff"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Heading",
+          "default": "Beautiful Ceramics, Tableware And Gifts From The Italian Culture"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#F6F4ED"
+        },
+        
+        {
+          "type": "header",
+          "content": "Section Button Settings"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Discover More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "header",
+          "content": "Button Color Settings",
+        },
+        {
+          "type": "color",
+          "id": "button_border_color",
+          "label": "Button Border Color"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#645832"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#F6F4ED"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color_hover",
+          "label": "Button Text Color Hover",
+          "default": "#333333"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_hover_color",
+          "label": "Button Background hover Color"
+        }
+      ]
+    },
+     {
+      "type": "@app"
+    }
+  ],
+"presets": [
+  {
+    "name": "Image Slider",
+    "category": "Image",
+  }
+]
+
+}
+{% endschema %}

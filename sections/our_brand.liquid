@@ -1,0 +1,176 @@
+{% style %}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.50 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.50 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 991) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .brands_slider_wrap .tt-brand_slider--{{ section.id }} {
+    position: relative;
+  }
+
+  @media (max-width: 749px) {
+    .brands_slider_wrap .swiper-button.brand {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+{% endstyle %}
+
+<div class="section-{{ section.id }}-padding {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+  <div class="brands_slider_wrap" data-aos="{{ settings.aos_effect }}">
+    <div class="container" data-section-id="{{ section.id }}">
+      <div class="brand-container">
+        <div class="marquee-text">
+          <div class="marquee-wrapper">
+            <div class="marquee-track">
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'brand_image' %}
+                    <div class="brand-bar__item" {{ block.shopify_attributes }}>
+                      {% if block.settings.link != blank %}
+                        <a href="{{ block.settings.link }}">
+                      {% endif %}
+                      {% if block.settings.image != blank %}
+                        <img
+                          src="{{ block.settings.image | img_url: 'master' }}"
+                          alt="brand-logo"
+                          class="brand-bar__image"
+                          loading="lazy"
+                          width=""
+                          height=""
+                        >
+                      {% else %}
+                        {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                      {% if block.settings.link != blank %}
+                        </a>
+                      {% endif %}
+                    </div>
+                  {% when '@app' %}
+                    <div class="brand-bar__item app-block" {{ block.shopify_attributes }}>
+                      {% render block %}
+                    </div>
+                {% endcase %}
+              {% endfor %}
+
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'brand_image' %}
+                    <div class="brand-bar__item" {{ block.shopify_attributes }}>
+                      {% if block.settings.link != blank %}
+                        <a href="{{ block.settings.link }}">
+                      {% endif %}
+                      {% if block.settings.image != blank %}
+                        <img
+                          src="{{ block.settings.image | img_url: 'master' }}"
+                          alt="brand-logo"
+                          class="brand-bar__image"
+                          loading="lazy"
+                          width=""
+                          height=""
+                        >
+                      {% else %}
+                        {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                      {% if block.settings.link != blank %}
+                        </a>
+                      {% endif %}
+                    </div>
+
+                  {% when '@app' %}
+                    <div class="brand-bar__item app-block" {{ block.shopify_attributes }}>
+                      {% render block %}
+                    </div>
+                {% endcase %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand list",
+  "class": "index-section brand-logo",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand_image",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Slider Brand Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "image width 150px X 150px height"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand list",
+      "category": "Image",
+      "blocks": [
+        { "type": "brand_image" },
+        { "type": "brand_image" },
+        { "type": "brand_image" },
+        { "type": "brand_image" },
+        { "type": "brand_image" },
+        { "type": "brand_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

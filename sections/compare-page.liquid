@@ -1,0 +1,144 @@
+<style>
+  .page-content-wrapper {
+  margin-bottom: 7rem;
+}
+
+.page-content-wrapper .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page-content-wrapper .compare-table {
+  border-collapse: collapse;
+  min-width: 600px; 
+}
+
+.page-content-wrapper .compare-table th,
+.page-content-wrapper .compare-table td {
+  border: 1px solid #e5e5e5;
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: var(--font-heading-family);
+  color: rgb(var(--color-foreground));
+}
+
+.page-content-wrapper .compare-table th {
+  width: 180px;
+}
+
+.page-content-wrapper .compare-table img {
+  max-width: 273px;
+  height: auto;
+  object-fit: cover;
+}
+
+.page-content-wrapper .compare-remove {
+  cursor: pointer;
+color:var(--body-text-color);
+}
+
+.page-content-wrapper .compare-remove:hover {
+  color: #000;
+}
+
+.page-content-wrapper .in-stock {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.page-content-wrapper .out-of-stock {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.page-content-wrapper .product-price {
+  font-size: 2rem;
+      color: var(--secondary-text-color);
+}
+
+.page-content-wrapper td.no-compare-text {
+  border: 0;
+  padding: 0;
+  width: 100%;
+  margin: 0 auto;
+      text-align: left;
+}
+
+
+</style>
+
+<div class="page-content-wrapper">
+  <div class="page-width">
+    <h2>Product Comparison</h2>
+    <div class="table-responsive">
+      <table class="compare-table">
+        <tbody class="compare-box"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const compareProducts = JSON.parse(localStorage.getItem('compareProducts') || '[]');
+    const tbody = document.querySelector('.compare-box');
+
+    if (compareProducts.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" class="no-compare-text">No products to compare.</td></tr>`;
+      return;
+    }
+
+    function renderRow(label, key, renderFn) {
+      let row = `<tr><th>${label}</th>`;
+      compareProducts.forEach((p, i) => {
+        let value = renderFn ? renderFn(p) : p[key] || '';
+        row += `<td>${value}</td>`;
+      });
+      row += '</tr>';
+      tbody.innerHTML += row;
+    }
+
+    let removeRow = '<tr><th>Remove</th>';
+    compareProducts.forEach((p, i) => {
+      removeRow += `<td><span class="compare-remove" data-index="${i}">
+    <svg xmlns="https://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M 10 2 L 9 3 L 3 3 L 3 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 4.3652344 7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C 17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z"/></svg>
+    </span></td>`;
+    });
+    removeRow += '</tr>';
+    tbody.innerHTML += removeRow;
+
+    renderRow('Product Image', 'image', (p) => `<img src="${p.image}" alt="${p.title}">`);
+
+    renderRow('Product Name', 'title', (p) =>
+      p.url
+        ? `<a href="${p.url}" class="compare-product-link" style="text-decoration:none; color:inherit;">
+            ${p.title}
+          </a>`
+        : p.title
+    );
+
+    renderRow('Product Desc', 'description', (p) => `${p.description}`);
+
+    renderRow('Product Type', 'type');
+
+    renderRow('Product Vendor', 'vendor');
+
+    renderRow('Unit Price', 'price', (p) => `<strong class="product-price">${p.price}</strong>`);
+
+    renderRow('Stock Status', 'availability', (p) =>
+      p.availability.toLowerCase().includes('in stock')
+        ? `<span class="in-stock">${p.availability}</span>`
+        : `<span class="out-of-stock">${p.availability}</span>`
+    );
+
+    document.querySelectorAll('.compare-remove').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        const index = parseInt(this.dataset.index);
+        compareProducts.splice(index, 1);
+        localStorage.setItem('compareProducts', JSON.stringify(compareProducts));
+        location.reload();
+      });
+    });
+  });
+</script>

@@ -1,0 +1,218 @@
+{% style %}
+  {% for block in section.blocks %}
+      .split-slider--{{ block.id }} .custom-content, .split-slider--{{ block.id }} .custom-content h2, split-slider--{{ block.id }} .custom-content .button-text {
+          color:{{ block.settings.common_color }};
+      }
+      .split-slider--{{ block.id }} .custom-content .button-text {
+          color:{{ block.settings.common_color }};
+      }
+  {% endfor %}
+    .section-{{ section.id }}-padding {
+            padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+            padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+          }
+           @media screen and (min-width: 750px) {
+            .section-{{ section.id }}-padding {
+              padding-top: {{ section.settings.padding_top }}px;
+              padding-bottom: {{ section.settings.padding_bottom }}px;
+            }
+          }
+{% endstyle %}
+
+<div class="main-container page-width">
+  <div class="custom-split-wrapper section-{{ section.id }}-padding" data-aos="{{ settings.aos_effect }}">
+    <custom-split-slider class="custom-left-slider">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'slide' %}
+              <div class="swiper-slide" style="position:relative;">
+                <div class="split-slider--{{ block.id }}">
+                  {% if block.settings.image %}
+                    <a href="{{ block.settings.image_left_url }}">
+                      <img
+                        src="{{ block.settings.image | img_url: 'master' }}"
+                        width=""
+                        height=""
+                        loading="lazy"
+                      >
+                    </a>
+                  {% endif %}
+                  <div class="custom-content {{ block.settings.select_position }}">
+                   <div>
+                    {% if block.settings.subheading != blank %}
+                      <p>{{ block.settings.subheading }}</p>
+                    {% endif %}
+
+                    {% if block.settings.subheading != blank %}
+                      <h2>{{ block.settings.heading }}</h2>
+                    {% endif %}
+
+                    {% if block.settings.button_text != blank %}
+                      <div>
+                      <a href="{{ block.settings.button_link }}" class="button-text">
+                        {{ block.settings.button_text }}
+                      </a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+       <div class="swiper-button-prev custom-arrow"></div>
+        <div class="swiper-button-next custom-arrow"></div>
+      </div>
+    </custom-split-slider>
+
+    <div class="right-side-inner">
+      <div class="custom-right-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'side_box' %}
+            <div class="custom-hover custom-right-item image-animation">
+              {% if block.settings.image != blank %}
+                <a href="{{ block.settings.image_Right_url }}" class="banner-image">
+                  <img src="{{ block.settings.image | img_url: 'master' }}" width="" height="" loading="lazy">
+                </a>
+              {% else %}
+                {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              <div class="custom-content">
+                <div>
+                {% if block.settings.subheading != blank %}
+                  <p>{{ block.settings.subheading }}</p>
+                {% endif %}
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+              </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% javascript %}
+if (!customElements.get('custom-split-slider')) {
+  customElements.define(
+    'custom-split-slider',
+    class extends HTMLElement {
+      connectedCallback() {
+        new Swiper(this.querySelector('.swiper'), {
+          loop: true,
+          speed: 1000,
+          effect: 'fade',
+          fadeEffect: {
+            crossFade: true,
+          },
+          autoplay: {
+             delay: 4000,
+             disableOnInteraction: false,
+           },
+          navigation: {
+            nextEl: this.querySelector('.swiper-button-next.custom-arrow'),
+            prevEl: this.querySelector('.swiper-button-prev.custom-arrow'),
+          },
+        });
+      }
+    }
+  );
+}
+{% endjavascript %}
+
+
+
+{% schema %}
+{
+  "name": "Custom Featured Split",
+  "settings": [
+       {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slider Block",
+      "settings": [
+       
+        { "type": "image_picker", "id": "image", "label": "Slide Image", "info": "image size 985px X 780px" },
+        {
+          "type": "select",
+          "id": "select_position",
+          "label": "Content Position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "url",
+          "id": "image_left_url",
+          "label": "Image Left URL"
+        },
+        {
+          "type": "color",
+          "id": "common_color",
+          "label": "Common Color",
+          "default": "#222222"
+        },
+        { "type": "text", "id": "subheading", "label": "Subheading" },
+        { "type": "textarea", "id": "heading", "label": "Heading" },
+        { "type": "text", "id": "button_text", "label": "Button Text" },
+        { "type": "url", "id": "button_link", "label": "Button Link" }
+      ]
+    },
+    {
+      "type": "side_box",
+      "name": "Right Side Box",
+      "limit": 2,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "image size 695px X 375px" },
+        {
+          "type": "url",
+          "id": "image_Right_url",
+          "label": "Image Right URL"
+        },
+        { "type": "text", "id": "subheading", "label": "Subheading" },
+        { "type": "textarea", "id": "heading", "label": "Heading" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Custom Featured Split",
+      "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "side_box" }, { "type": "side_box" }]
+    }
+  ]
+}
+{% endschema %}

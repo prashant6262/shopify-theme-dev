@@ -1,0 +1,329 @@
+{% style %}
+.section-{{ section.id }} .swiper-button-prev, .section-{{ section.id }} .swiper-button-next {
+      background: {{section.settings.arrow_bg_color}};
+}
+.section-{{ section.id }} .swiper-button-prev:hover, .section-{{ section.id }} .swiper-button-next:hover {
+      background: {{section.settings.arrow_bg_color_hover}};
+}
+  {% for block in section.blocks %}
+  .slide--{{ block.id }} .feezee-slide{
+    flex-direction: {% if block.settings.layout_direction == 'reverse' %}row-reverse{% else %}row{% endif %};
+  }
+    .slide--{{ block.id }} h3.feezee-heading{
+      color:{{ block.settings.subheading_color }};
+    }
+    .slide--{{ block.id }} h1.feezee-heading{
+      color:{{ block.settings.heading_color }};
+    }
+
+  .tt-hero-slider .swiper-slide{
+            background-image: url({{ block.settings.bg_image | img_url: "master" }});
+              background-color:{{ block.settings.bg_color}};
+               background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  @media screen and (max-width: 450px) {
+  .tt-hero-slider .feezee-slide {
+    flex-direction: column;
+    gap: 4rem;
+    margin: 6rem auto;
+  }
+}
+  .section-{{ section.id }}-padding {
+     padding-top: {{ section.settings.padding_top | times: 0.50 | round: 0 }}px;
+     padding-bottom: {{ section.settings.padding_bottom | times: 0.30 | round: 0 }}px;
+   }
+   @media screen and (min-width: 768px) {
+     .section-{{ section.id }}-padding {
+       padding-top: {{ section.settings.padding_top }}px;
+       padding-bottom: {{ section.settings.padding_bottom }}px;
+     }
+   }
+
+  {% endfor %}
+{% endstyle %}
+
+<div class="tt-hero-slider section-{{ section.id }} section-{{ section.id }}-padding">
+  <div class="swiper slider-swiper--{{ section.id }}">
+    <div class="swiper-wrapper">
+       {% for block in section.blocks %}
+  {% case block.type %}
+            {%when 'slide' %}
+        
+        <div class="swiper-slide slide--{{ block.id }}">
+          <div class="feezee-slide">
+            <div class="feezee-left">
+              {% if block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | img_url: 'master' }}"
+                  alt="{{ block.settings.heading }}"
+                  class="feezee-main-img"
+                  loading="lazy"
+                  width=""
+                  height=""
+                >
+              {% endif %}
+            </div>
+
+            <div class="hero-content-area" data-aos="{{ block.settings.aos_effect_sec }}">
+              <div class="feezee-right">
+                <div>
+                <div class="content-area">
+                  {% if block.settings.subheading != blank %}
+                    <h3 class="feezee-heading">{{ block.settings.subheading }}</h3>
+                  {% endif %}
+                  {% if block.settings.heading != blank %}
+                    <h1 class="feezee-heading">{{ block.settings.heading }}</h1>
+                  {% endif %}
+
+                  {% if block.settings.btn_label != blank %}
+                    <a href="{{ block.settings.btn_link }}" class="button button-hover-style">
+                      {{ block.settings.btn_label }}
+                    </a>
+                  {% endif %}
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+{% endfor %}
+    </div>
+
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  new Swiper('.slider-swiper--{{ section.id }}', {
+    effect: 'fade', 
+      autoplay: {
+  delay: {{ section.settings.autoplay_delay | default: 4000 }},
+  disableOnInteraction: false,
+    },  
+    speed: {{ section.settings.transition_speed | default: 1200 }},
+    loop: {{ section.settings.loop }},
+    fadeEffect: {
+      crossFade: true, 
+    },
+
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+      dynamicBullets: true,
+    },
+
+    keyboard: {
+      enabled: true,
+      onlyInViewport: true,
+    },
+
+    breakpoints: {
+      640: {
+        speed: 1000,
+      },
+      1024: {
+        speed: 1200,
+      },
+    },
+
+    on: {
+      slideChangeTransitionStart: function () {
+        const slides = document.querySelectorAll('.slider-swiper--{{ section.id }} .swiper-slide img');
+        slides.forEach((slide) => slide.classList.remove('zoom-effect'));
+      },
+      slideChangeTransitionEnd: function () {
+        const activeSlide = document.querySelector('.slider-swiper--{{ section.id }} .swiper-slide-active img');
+        if (activeSlide) activeSlide.classList.add('zoom-effect');
+      },
+    },
+  });
+});
+
+
+</script>
+
+{% schema %}
+{
+  "name": "Hero Slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow background Color",
+      "default":"#b18b5e"
+    },
+      {
+      "type": "color",
+      "id": "arrow_bg_color_hover",
+      "label": "Hover Arrow background Color",
+      "default":"#222"
+    },
+    
+     {
+      "type": "number",
+      "id": "autoplay_delay",
+      "label": "Autoplay Delay (ms)",
+      "default": 4000
+    },
+    {
+      "type": "number",
+      "id": "transition_speed",
+      "label": "Transition Speed (ms)",
+      "default": 1200
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop Slides",
+      "default": true
+    },
+    {
+      "type":"header",
+      "content":"Section padding"
+    },
+    {
+      "type":"range",
+      "id":"padding_top",
+      "min":0,
+      "max":100,
+      "step":4,
+      "unit":"px",
+      "label":"t:sections.all.padding.padding_top",
+      "default":36
+    },
+    {
+      "type":"range",
+      "id":"padding_bottom",
+      "min":0,
+      "max":100,
+      "step":4,
+      "unit":"px",
+      "label":"t:sections.all.padding.padding_bottom",
+      "default":36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "bg_image",
+          "label": "Background Image",
+          "info": "image size width 1903 width X 750 height"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default":"#f5f1e6"
+        },
+        
+        {
+          "type": "header",
+          "content": "Layout Direction"
+        },
+        {
+          "type": "select",
+          "id": "layout_direction",
+          "label": "Layout Direction image",
+          "options": [
+            { "value": "normal", "label": "Left to Right" },
+            { "value": "reverse", "label": "Right to Left" }
+          ],
+          "default": "normal"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Main Image (Left)",
+          "info": "image size 820 width X 580 height"
+        },
+        {
+          "type": "header",
+          "content": "Text side animation"
+        },
+         {
+      "type": "select",
+      "id": "aos_effect_sec",
+      "label": "Section Animation",
+      "options": [
+        { "value": "fade-up", "label": "Fade Up" },
+        { "value": "fade-down", "label": "Fade Down" },
+        { "value": "zoom-in", "label": "Zoom In" },
+        { "value": "zoom-in-up", "label": "Zoom In Up" },
+        { "value": "fade-left", "label": "Fade Left" },
+        { "value": "fade-right", "label": "Fade Right" }
+      ],
+      "default": "fade-right"
+    },
+         {
+          "type": "text",
+          "id": "subheading",
+          "label": "Sub Heading",
+          "default": "Krafti Art? It’s A craft"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color",
+          "label": "Sub Heading Color",
+          "default": "#b38f64"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Best Modern Wood Handmade & Krafti Art Collection"
+        },
+
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#222"
+        },
+       
+
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label",
+          "default": "Shop by Collections"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button Link"
+        }
+      ]
+    },
+       {
+      "type": "@app"
+    }
+  ],
+  
+  "presets": [
+    {
+      "name": "Hero Slider",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

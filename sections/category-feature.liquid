@@ -1,0 +1,468 @@
+{%- style -%}
+    .tt-collection-slider{
+            background-color: {{section.settings.bg_color}};
+    }
+    .tt-collection-slider .heading-dashboard .tt-title{
+       color:{{section.settings.title_color}};
+    }
+    .tt-collection-slider .heading-dashboard p{
+       color:{{section.settings.text_color}};
+     }
+    .tt-collection-slider .tt_cat_content h2{
+       color:{{section.settings.collection_title_color}};
+       transition: color 0.5s ease;
+     }
+    .tt-collection-slider .tt_cat_content h2:hover{
+       color:{{section.settings.coll_title_hover}};
+    }
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+  .collection_img .none {
+    border-radius: 0;
+  }
+  .cat_desc .cat_image .cat_image_box::before{
+        background-color: {{section.settings.box_color}};
+  }
+.cat_desc .cat_image .cat_image_box::before {
+    background: {{section.settings.border_box}};
+}
+.cat_desc:hover .cat_image:after {
+  border: 1px dashed {{section.settings.border_box}};	
+}
+.cat_desc:hover .cat_image::after{
+    border-color: {{section.settings.box_color}};;
+}
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+<div
+  class="section-{{ section.id }}-padding"
+  {% if settings.enable_animation != blank %}
+    data-aos="fade-up"
+  {% endif %}
+>
+  <div data-aos="{{ settings.aos_effect }}" data-section-id="{{ section.id }}" data-section-type="tt-collection-slider-wrap" class="tt-collection-slider">
+    <div class="collection_cms_slider_wrap container">
+      {% if section.settings.title != blank %}
+        <header class="center section-header heading-dashboard">
+          {% if section.settings.subtitle != blank %}
+            <p
+              class="caption-text {{ section.settings.text_style }}"
+              {{ section.shopify_attributes }}
+            >
+              {{ section.settings.subtitle | escape }}
+            </p>
+          {% endif %}
+          <h2 class="tt-title {{ section.settings.heading_size }}">{{ section.settings.title | escape }}</h2>
+        </header>
+      {% endif %}
+
+      <div class="slider-btn">
+      {% if section.blocks.size > 0 %}
+        <div class="swiper {{ section.id }}--collectionSwiper">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'text_collection' %}
+                  {%- assign collection_feature = collections[block.settings.collection_cat_id] -%}
+                  <div id="cat-featured--{{ block.id }}" class="swiper-slide collection_cat_item">
+                    <div class="category_content col-sm-12">
+                      <div class="tt_cat_content">
+                        <div class="collection_img">
+                          <a href="{{ collection_feature.url }}" class="cat_desc">
+                            <div class="cat_image">
+                                <div class="cat_image_box image-animation">
+                              {% if block.settings.image_1 != blank %}
+                                <img
+                                  src="{{ block.settings.image_1 | img_url:"master"  }}"
+                                  alt="collection-img"
+                                  loading="lazy"
+                                  width=""
+                                  height=""
+                                >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  class="feather feather-arrow-up-right"
+                                >
+                                  <line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline>
+                                </svg>
+                              {%- else -%}
+                                {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                              {% endif %}
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <p class="card__heading center">
+                          <a href="{{ collection_feature.url }}" class="full-unstyled-link card_heading_hover">
+                            {% if collection_feature.title != blank %}
+                            <h2>{{ collection_feature.title }}</h2>
+                            {% endif %}
+
+                            <div class="card-collection__counter">
+                              {{ collection_feature.all_products_count }} {{ block.settings.product_title }}
+                            </div>
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                {% when '@app' %}
+                  {% render block %}
+              {% endcase %}
+            {% endfor %}
+          </div>
+          
+        </div>
+      {% endif %}
+
+        <div class="swiper-navigation-wrapper">
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+  </div>
+    </div>
+  </div>
+  
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    new Swiper(".{{ section.id }}--collectionSwiper", {
+      slidesPerView: {{section.settings.col_desktop}},
+      spaceBetween: {{ section.settings.space_between }},
+      loop: {{ section.settings.enable_loop }},
+     autoplay: {{ section.settings.enable_autoplay }} ? {
+        delay: {{ section.settings.autoplay_delay }},
+        disableOnInteraction: false,
+      } : false,  
+         navigation: {
+      nextEl: '.swiper-navigation-wrapper .swiper-button-next',
+      prevEl: '.swiper-navigation-wrapper .swiper-button-prev',
+    },
+      breakpoints: {
+          100: {
+            slidesPerView: {{section.settings.col_mobile}}
+          },
+          480: {
+            slidesPerView: 2,
+            spaceBetween: 30
+          },
+          575: {
+            slidesPerView: 2,
+            spaceBetween: 30
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 30
+          },
+          992: {
+            slidesPerView: 4,
+            spaceBetween: 30
+          },
+          1200: {
+            slidesPerView: {{section.settings.col_desktop}},
+            spaceBetween: {{ section.settings.space_between }}
+          }
+        }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Category Feature",
+  "class": "index-section category-category",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "background Color",
+      "default": "#F8F5EF"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Because you need time for yourself, Blend Styles Wear in you"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "hxl",
+          "label": "t:sections.all.heading_size.options__4.label"
+        },
+        {
+          "value": "hxxl",
+          "label": "t:sections.all.heading_size.options__5.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#222222"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Popular Categories",
+      "label": "Sub title"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "options": [
+        {
+          "value": "subtitle",
+          "label": "subtitle"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "uppercase",
+      "label": "Text style"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "large",
+      "label": "subtitle size"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "subtitle Color",
+      "default": "#C6A87D"
+    },
+    {
+      "type": "color",
+      "id": "collection_title_color",
+      "label": "collection Title Color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "coll_title_hover",
+      "label": "collection Title Hover Color",
+      "default": "#C6A87D"
+    },
+ {
+      "type": "header",
+      "content": "card Settings"
+    },
+     {
+      "type": "color",
+      "id": "box_color",
+      "label": "Card Box Color",
+      "default": "#C6A87D"
+    },
+     {
+      "type": "color",
+      "id": "border_box",
+      "label": "Border Box Color",
+      "default": "#B18B5E"
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "range",
+      "id": "col_desktop",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "label": "Show slide in DESKTOP",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "label": "Space Between Slide",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_loop",
+      "label": "Enable loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 1000,
+      "max": 6000,
+      "step": 100,
+      "label": "Autoplay delay (ms)",
+      "default": 3000
+    },
+    {
+      "type": "range",
+      "id": "col_mobile",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "label": "Show slide in MOBILE",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_collection",
+      "name": "collection cms",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image",
+          "info": "Image Size width 222px X height 222px"
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "Product Title",
+          "default":"Products"
+        },
+        {
+          "type": "collection",
+          "id": "collection_cat_id",
+          "label": "Select collection"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category Feature",
+      "category": "TT CMS section",
+      "settings": {
+        "title": "Because you need time for yourself, Blend Styles Wear in you",
+        "heading_size": "h1",
+        "title_color": "#2F2926",
+        "subtitle": "Popular Categories",
+        "text_size": "large",
+        "text_color": "#C55626",
+        "collection_title_color": "#2F2926",
+        "coll_title_hover": "#C55626",
+        "col_desktop": 4,
+        "space_between": 60,
+        "enable_autoplay": true,
+        "autoplay_delay": 3000,
+        "col_mobile": 1,
+        "padding_top": 36,
+        "padding_bottom": 36
+      },
+      "blocks": [
+        {
+          "type": "text_collection",
+          "settings": {
+            "image_1": "",
+            "collection_cat_id": "frontpage"
+          }
+        },
+        {
+          "type": "text_collection",
+          "settings": {
+            "image_1": "",
+            "collection_cat_id": "summer-collection"
+          }
+        },
+        {
+          "type": "text_collection",
+          "settings": {
+            "image_1": "",
+            "collection_cat_id": "new-arrivals"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

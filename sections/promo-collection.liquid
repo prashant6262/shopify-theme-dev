@@ -1,0 +1,290 @@
+{%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+      overflow-x:clip;
+    }
+    {% for block in section.blocks %}
+      .promo-grid-{{ block.id }} .promo-tag{
+          color:{{ block.settings.tag_color }};
+        }
+          .promo-grid-{{ block.id }} .promo-title{
+          color:{{ block.settings.heading_color }};
+        }
+ .promo-grid-{{ block.id }} .button {
+        border-radius: {{ block.settings.btn_border_radius }}px;
+             background-color: {{ block.settings.button_bg }};
+          color: {{ block.settings.button_text }};
+      }
+              .promo-grid-{{ block.id }} .button::before {
+          background-color: {{ block.settings.button_bg_hover }};
+        }
+         .promo-grid-{{ block.id }} .button:Hover{
+        color: {{ block.settings.button_text_hover }};
+         }
+        
+  {% endfor %}
+  .section-{{ section.id }}-padding .promo-grid {
+      grid-template-columns: repeat({{ section.settings.grid_columns }}, 1fr);
+    }
+
+@media (min-width: 951px) and (max-width: 1250px) {
+  .promo-content {
+    row-gap: 1rem;
+  }
+}
+
+
+    @media(max-width:950px){
+    .section-{{ section.id }}-padding .promo-grid {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: auto;
+    }
+    .promo-card {
+    flex: 0 0 auto;
+    }
+  }
+
+    @media screen and (min-width: 768px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding main-promo-collection {{ section.settings.custom_class }}" data-aos="{{ settings.aos_effect }}">
+    <div class="{{ section.settings.layout_width }}">
+  <div class="promo-grid">
+  {% for block in section.blocks %}
+  {% case block.type %}
+            {%when 'promo' %}
+      <div class="promo-card promo-grid-{{ block.id }}" {{ block.shopify_attributes }}>
+      
+          <div class="image-animation promo-image shades-animation">
+            <div class="banner-image">
+             {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | img_url: "master" }}"
+              alt="{{ block.settings.heading }}"
+              width=""
+              height=""
+              loading="lazy"
+            />
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag }}
+             {% endif %}
+                </div>
+            <div class="promo-content">
+              <div>
+                {% if block.settings.tag != blank %}
+                  <span class="promo-tag">{{ block.settings.tag }}</span>
+                {% endif %}
+
+                {% if block.settings.heading != blank %}
+                  <h2 class="promo-title">{{ block.settings.heading }}</h2>
+                {% endif %}
+              </div>
+
+              {% if block.settings.link_text != blank %}
+                <div>
+                  <a href="{{ block.settings.link }}" class="{% if block.settings.enable_secondary_button%}button button-hover-style{% endif %} promo-link">
+                    {{ block.settings.link_text }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        
+      </div>
+     {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+      {% endfor %}
+  </div>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "Promo Collection",
+  "max_blocks": 3,
+  "settings": [
+     {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom Classt",
+          "default": "second_banner"
+        },
+         {
+        "type": "select",
+        "id": "layout_width",
+        "label": "Layout Width",
+        "default": "container",
+        "options": [
+            {
+            "value": "container",
+            "label": "Container"
+            },
+            {
+            "value": "page-width",
+            "label": "Page Width"
+            }
+        ]
+        },
+     {
+      "type": "header",
+      "content": "Columns Box"
+    },
+    {
+  "type": "select",
+  "id": "grid_columns",
+  "label": "Grid Columns (Desktop)",
+  "options": [
+    {
+      "value": "1",
+      "label": "1 Column"
+    },
+    {
+      "value": "2",
+      "label": "2 Columns"
+    },
+    {
+      "value": "3",
+      "label": "3 Columns"
+    }
+  ],
+  "default": "3"
+},
+
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo",
+      "name": "Promo Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Top Tag Text",
+          "default": "BIGGEST SALE"
+        },
+        {
+          "type": "color",
+          "id": "tag_color",
+          "label": "Tag Color",
+          "default": "#D23C3F"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Main Heading",
+          "default": "Less Promises More Creativity"
+        },
+            {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#222"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Right Image"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Button Link"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_secondary_button",
+            "label": "Enable Secondary Button",
+            "default": false
+            },
+             {
+  "type": "color",
+  "id": "button_bg",
+  "label": "Button background color",
+  "default": "#000000"
+},
+{
+  "type": "color",
+  "id": "button_text",
+  "label": "Button text color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_bg_hover",
+  "label": "Button hover background color",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "button_text_hover",
+  "label": "Button hover text color",
+  "default": "#fff"
+},
+       {
+    "type": "range",
+    "id": "btn_border_radius",
+    "label": "Banner Button Radius",
+    "min": 0,
+    "max": 50,
+    "step": 2,
+    "default": 0,
+    "unit": "px"
+  }
+      ]
+    },
+     {
+      "type": "@app"
+    }
+  ],
+"presets": [
+  {
+    "name": "Promo Collection",
+    "category": "Banners",
+    "blocks": [
+      { "type": "promo" },
+      { "type": "promo" },
+      { "type": "promo" }
+    ]
+  }
+]
+
+}
+{% endschema %}

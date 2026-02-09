@@ -1,0 +1,362 @@
+{%- style -%}
+   .section-{{ section.id }}-padding {
+     padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+     padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+     overflow-x:clip;
+   }
+       .hero-slide-wrapper{
+       background-color: {{ section.settings.bg_color }};
+     }
+
+       {% if section.settings.enable_zoom %} 
+    .bg_image { animation: zoomInHero {{ section.settings.zoom_speed }}s ease-in-out infinite alternate; 
+    will-change: transform; } 
+{% endif %}
+    @keyframes zoomInHero { 0% { transform: scale(1); } 100% { transform: scale(1.12); } }
+
+  {% for block in section.blocks %}
+   .custo-{{ block.id }} .hero-content h1{
+      color:{{block.settings.heading_color}};
+   }
+   .custo-{{ block.id }} .hero-content h3{
+      color:{{block.settings.text_color}};
+   }
+   {%endfor %}
+
+   @media screen and (min-width: 768px) {
+     .section-{{ section.id }}-padding {
+       padding-top: {{ section.settings.padding_top }}px;
+       padding-bottom: {{ section.settings.padding_bottom }}px;
+     }
+   }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  <div class="main-slider-image">
+    <div class="swiper hero-slider--{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          <div class="swiper-slide custo-{{ block.id }}">
+            <div class="hero-slide-wrapper">
+              <img
+                src="{{block.settings.bg_image | img_url: 'master' }}"
+                width=""
+                height=""
+                loading="lazy"
+                class="bg_image"
+              >
+
+              <div class="hero-images-inner">
+                <div class="left-images">
+                  {% if block.settings.left_one %}
+                    <img
+                      src="{{ block.settings.left_one | img_url: 'master' }}"
+                      class="hero-img left-one"
+                      width=""
+                      height=""
+                      loading="lazy"
+                       data-depth="0.15"
+                    >
+                  {% endif %}
+
+                  {% if block.settings.left_two %}
+                    <img
+                      src="{{ block.settings.left_two | img_url: 'master' }}"
+                      class="hero-img left-two"
+                      width=""
+                      height=""
+                      loading="lazy"
+                        data-depth="0.25"
+                    >
+                  {% endif %}
+
+                  {% if block.settings.left_three %}
+                    <img
+                      src="{{ block.settings.left_three | img_url: 'master' }}"
+                      class="hero-img left-three"
+                      width=""
+                      height=""
+                      loading="lazy"
+                        data-depth="0.15"
+                    >
+                  {% endif %}
+                </div>
+
+
+                <div class="hero-content">
+                  {% if block.settings.subtitle %}
+                    <h3>{{ block.settings.subtitle }}</h3>
+                  {% endif %}
+                  {% if block.settings.title %}
+                    <h1>{{ block.settings.title }}</h1>
+                  {% endif %}
+                  {% if block.settings.button_label %}
+                    <div>
+                      <a
+                        href="{{ block.settings.button_link }}"
+                        class="button button--secondary button-hover-style hero-btn"
+                      >
+                        {{ block.settings.button_label }}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+     
+
+                <div class="right-images">
+                  {% if block.settings.right_one %}
+                    <img
+                      src="{{ block.settings.right_one | img_url: 'master' }}"
+                      class="hero-img right-one"
+                      width=""
+                      height=""
+                      loading="lazy"
+                        data-depth="0.15"
+                    >
+                  {% endif %}
+
+                  {% if block.settings.right_two %}
+                    <img
+                      src="{{ block.settings.right_two | img_url: 'master' }}"
+                      class="hero-img right-two"
+                      width=""
+                      height=""
+                      loading="lazy"
+                      data-depth="0.25"
+                    >
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination hero-pagination"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  new Swiper(".hero-slider--{{ section.id }}", {
+    slidesPerView: 1,
+    loop: {{ section.settings.enable_loop | json }},
+
+
+    {% if section.settings.enable_autoplay %}
+    autoplay: {
+      delay: {{ section.settings.autoplay_delay }},
+      disableOnInteraction: false
+    },
+    {% else %}
+    autoplay: false,
+    {% endif %}
+
+    pagination: {
+      el: ".hero-pagination",
+      clickable: true
+    }
+  });
+});
+
+  // Parallax movement only for .hero-img
+document.querySelectorAll('.swiper-slide').forEach(slide => {
+  slide.addEventListener('mousemove', (e) => {
+    const imgs = slide.querySelectorAll('.hero-img');
+    const rect = slide.getBoundingClientRect();
+    const x = e.clientX - rect.left; 
+    const y = e.clientY - rect.top;
+
+    imgs.forEach(img => {
+      const speed = 16; // lower = smaller movement
+      const moveX = (x - rect.width / 2) / speed;
+      const moveY = (y - rect.height / 2) / speed;
+
+      img.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+  });
+
+  slide.addEventListener('mouseleave', () => {
+    const imgs = slide.querySelectorAll('.hero-img');
+    imgs.forEach(img => {
+      img.style.transform = `translate(0, 0)`;
+    });
+  });
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Custom Hero Slider",
+  "settings": [
+      
+    {
+      "type": "header",
+      "content": "Background Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#585b34"
+    },
+     {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable Autoplay",
+      "default": true
+    },
+
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay Delay (milliseconds)",
+      "min": 500,
+      "max": 9500,
+      "step": 500,
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "Background Zoom Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable Zoom-in Animation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "zoom_speed",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "label": "Zoom Animation Speed",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slider",
+      "name": "slider",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Left Side images"
+        },
+        {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+        {
+          "type": "image_picker",
+          "id": "left_one",
+          "label": "Left One Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "left_two",
+          "label": "Left Two Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "left_three",
+          "label": "Left Three Image"
+        },
+        {
+          "type": "header",
+          "content": "Right Side images"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_one",
+          "label": "Right One Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_two",
+          "label": "Right Two Image"
+        },
+
+        {
+          "type": "header",
+          "content": "Cneter Text"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "WHAT RHYMES ART? IT’S CRAFT."
+        },
+         {
+      "type": "color",
+      "id": "text_color",
+      "label": "subtitle Color",
+      "default": "#fff"
+    },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Main Title",
+          "default": "Handmade Arts & Crafting According to your needs"
+        },
+           {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#fff"
+    },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link",
+          "default": "/collections/all"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Hero Slider"
+    }
+  ]
+}
+{% endschema %}

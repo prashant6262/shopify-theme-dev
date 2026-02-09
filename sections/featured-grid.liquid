@@ -1,0 +1,434 @@
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if section.settings.quick_add == 'bulk' -%}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+    overflow-x:clip;
+  }
+   .section-{{ section.id }}-padding .timer-date{
+     background-color: {{ section.settings.timer_bg_color }};
+     color:{{ section.settings.timer_text_color}};
+    }
+
+    @media(min-width:992px){
+{% if section.settings.show_description %}
+      .section-{{ section.id }}-padding .home-card{
+        display:block;
+            font-size: 14px;
+         color: var(--body-text-color);
+      }
+      {% endif %}
+    }
+     
+
+   .section-{{ section.id }}-padding.featured-grid-section {
+    --qa-bg: {{ section.settings.quick_add_bg }};
+   --qa-text: {{ section.settings.quick_add_text }};
+   --qa-bg-hover: {{ section.settings.quick_add_bg_hover }};
+   --qa-text-hover: {{ section.settings.quick_add_text_hover }};
+   }
+
+ .featured-grid-item .card-wrapper .common-class.other-product .compare_button, .featured-grid-item .card-wrapper .common-class.other-product .quick-view-btn{
+  background-color: {{ section.settings.other_background_color }};
+   }
+
+  @media screen and (min-width: 768px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="featured-grid-section section-{{ section.id }}-padding {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %} {{ section.settings.custom_class }}" data-aos="{{ settings.aos_effect }}">
+  <div class="container">
+    <div class="featured-grid-arrow">
+      <div class="featured-grid-header">
+        {% if section.settings.heading != blank %}
+          <div class="heading-div">
+          <h2>{{ section.settings.heading }}</h2>
+          </div>
+        {% endif %}
+
+        {% if section.settings.enable_countdown %}
+        <div
+          class="timer-date"
+          id="timer-{{ section.id }}"
+          data-end-date="{{ section.settings.timer_end_date }}"
+        >
+          <div class="count-title">
+            {{ section.settings.timer_label }}
+          </div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-clock"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+
+          <div><p class="days">00</p></div>
+          <div><p class="hours">00</p></div>
+          <div><p class="minutes">00</p></div>
+          <div><p class="seconds">00</p></div>
+        </div>
+         {% endif %}
+
+      <div class="swiper-navigation-wrapper featured-grid featured-grid-nav-{{ section.id }}">
+        <div class="swiper-button-prev swiper-prev-{{ section.id }}"></div>
+        <div class="center-line"></div>
+        <div class="swiper-button-next swiper-next-{{ section.id }}"></div>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="swiper featured-grid-swiper--{{section.id }}">
+      <div class="swiper-wrapper">
+        {% for product in section.settings.collection.products %}
+          <div class="swiper-slide featured-grid-item">
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: 'square',
+              image_shape: 'default',
+              show_secondary_image: section.settings.show_secondary_image,
+              show_rating: section.settings.show_rating,
+              section_id: section.id,
+              quick_add: section.settings.quick_add,
+              color_swatch: section.settings.color_swatch
+            %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if section.blocks.size > 0 %}
+  <div class="featured-grid-app-blocks">
+    {% for block in section.blocks %}
+      {% render block %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const timer = document.getElementById('timer-{{ section.id }}');
+    if (!timer) return;
+
+    const endDate = timer.dataset.endDate;
+    if (!endDate) return;
+
+    const endTime = new Date(endDate.replace(/-/g, '/')).getTime();
+
+    const daysEl = timer.querySelector('.days');
+    const hoursEl = timer.querySelector('.hours');
+    const minutesEl = timer.querySelector('.minutes');
+    const secondsEl = timer.querySelector('.seconds');
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const diff = endTime - now;
+
+      if (diff <= 0) {
+        daysEl.innerHTML = '00';
+        hoursEl.innerHTML = '00';
+        minutesEl.innerHTML = '00';
+        secondsEl.innerHTML = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      daysEl.innerHTML = days;
+      hoursEl.innerHTML = String(hours).padStart(2, '0');
+      minutesEl.innerHTML = String(minutes).padStart(2, '0');
+      secondsEl.innerHTML = String(seconds).padStart(2, '0');
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  }); 
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sectionId = '{{ section.id }}';
+
+    const columns = {{ section.settings.desktop_columns }};
+    const rows = {{ section.settings.desktop_rows }};
+    const totalVisible = columns * rows;
+
+    new Swiper('.featured-grid-swiper--{{section.id }}', {
+      slidesPerView: columns,
+      spaceBetween: 30,
+
+      {% if section.settings.desktop_rows > 1 %}
+      grid: {
+        rows: rows,
+        fill: 'row'
+      },
+      {% endif %}
+
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}',
+        prevEl: '.swiper-prev-{{ section.id }}'
+      },
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1
+          }
+        },
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+          grid: {
+            rows: 1
+          }
+        },
+        1024: {
+          slidesPerView: columns,
+           spaceBetween: 20,
+          {% if section.settings.desktop_rows > 1 %}
+          grid: {
+            rows: rows
+          }
+          {% endif %}
+        }
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Classt",
+      "default": "second_copy"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Seller"
+    },
+
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show secondary image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+      {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Description",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "standard",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "info": "t:sections.main-collection-product-grid.settings.quick_add.info",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+        },
+        {
+          "value": "bulk",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Quick add button colors"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_bg",
+      "label": "Button background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_text",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_bg_hover",
+      "label": "Button hover background color",
+      "default": "#D23C3F"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_text_hover",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Grid layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "desktop_rows",
+      "label": "Desktop rows",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
+    },
+    {
+  "type": "checkbox",
+  "id": "enable_countdown",
+  "label": "Enable Countdown Timer",
+  "default": true
+},
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "Timer Label",
+      "default": "Ends in :"
+    },
+    {
+      "type": "text",
+      "id": "timer_end_date",
+      "label": "Timer End Date",
+      "info": "Format: YYYY-MM-DD HH:MM (24 hour)",
+      "default": "2026-09-30 12:00"
+    },
+    {
+      "type": "color",
+      "id": "timer_bg_color",
+      "label": "Timer Background Color",
+      "default": "#d23c3f"
+    },
+    {
+      "type": "color",
+      "id": "timer_text_color",
+      "label": "Timer Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+  {
+    "type": "@app"
+  }
+],
+"presets": [
+  {
+    "name": "Featured Grid",
+    "category": "Products",
+    "settings": {
+      "heading": "Best Sellers",
+      "desktop_columns": 3,
+      "desktop_rows": 2,
+      "show_secondary_image": true,
+      "show_rating": true,
+      "show_description": true,
+      "quick_add": "standard",
+      "enable_countdown": true,
+      "timer_label": "Ends in :",
+      "timer_end_date": "2026-09-30 12:00",
+      "padding_top": 36,
+      "padding_bottom": 36
+    }
+  }
+]
+
+}
+{% endschema %}

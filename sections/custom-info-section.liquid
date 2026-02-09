@@ -1,0 +1,287 @@
+{%- style -%}
+  .custom-info-section .subheading{
+  color: {{section.settings.subheading_color}};
+  }
+
+  {% for block in section.blocks %}
+  .custom-info-section .features p{
+  color: {{block.settings.text_color}};
+  }
+  .custom-info-section .features .feature-item:hover h3{
+    color: {{block.settings.text_color_hover}};
+        transition: color .5s;
+  }
+  {% endfor %}
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+    overflow-x:clip;
+  }
+
+  @media screen and (min-width: 768px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="custom-info-section section-{{ section.id }}-padding" data-aos="{{ settings.aos_effect }}">
+  <div class="container">
+    <div class="main-info">
+      <div class="images">
+        {% if section.settings.main_image != blank %}
+          <img
+            src="{{ section.settings.main_image | img_url: 'master' }}"
+            width=""
+            height=""
+            class="main-image"
+            alt="{{ section.settings.heading }}"
+          >
+        {% else %}
+          {{ 'product-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+        {% if section.settings.circle_image != blank %}
+          <div class="circle-image">
+            <img
+              src="{{ section.settings.circle_image | img_url: 'master' }}"
+              width=""
+              height=""
+              alt="{{ section.settings.heading }}"
+            >
+          </div>
+        {% else %}
+          {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+
+        {% if section.settings.secondary_image != blank %}
+          <div class="inner-sec-image">
+            <div class="image-animation main-secondary-image">
+              <img
+                src="{{ section.settings.secondary_image | img_url: 'master' }}"
+                width=""
+                height=""
+                alt="secondary image"
+                class="secondary-image"
+              >
+            </div>
+          </div>
+        {% else %}
+          {{ 'product-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+
+      <div class="content">
+        <div>
+          {% if section.settings.subheading != blank %}
+            <p class="subheading">{{ section.settings.subheading }}</p>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            <h2>{{ section.settings.heading }}</h2>
+          {% endif %}
+        </div>
+
+        <div class="features">
+          {% for block in section.blocks %}
+            <div class="feature-item">
+              {% if block.settings.icon_image != blank %}
+                <div class="feature-icon">
+                  <img src="{{ block.settings.icon_image | img_url: 'master' }}" width="" height="" alt="icon image">
+                </div>
+             
+              {% endif %}
+              <div class="feature-text">
+                {% if block.settings.feature_title != blank %}
+                  <h3>{{ block.settings.feature_title }}</h3>
+                {% endif %}
+                {% if block.settings.feature_text != blank %}
+                  <p>{{ block.settings.feature_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div>
+          {% if section.settings.button_text != blank %}
+            <a href="{{ section.settings.button_link }}" class="button button-hover-style">
+              {{- section.settings.button_text -}}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Info Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "More nature in more homes"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Sub Heading Color",
+      "default": "#c6a87d"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Handmade with patience and love for the artisanal craft"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "circle_image",
+      "label": "Circle Image",
+      "info": "image size 195 width X 195 height"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image",
+      "info": "image size 510 width X 640 height"
+    },
+    {
+      "type": "image_picker",
+      "id": "secondary_image",
+      "label": "Secondary Image",
+      "info": "image size 305 width X 395 height"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_title",
+          "label": "Feature Title",
+          "default": "High quality product"
+        },
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Feature Description",
+          "default": "Each item is made with care and attention to detail."
+        },
+        {
+          "type": "color",
+          "id": "text_color_hover",
+          "label": "Text Color",
+          "default": "#c6a87d"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Description Color",
+          "default": "#7A7A7A"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "image size width 45 X 45 height"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+  {
+    "name": "Custom Info Section",
+    "category": "Custom",
+    "settings": {
+      "subheading": "More nature in more homes",
+      "subheading_color": "#c6a87d",
+      "heading": "Handmade with patience and love for the artisanal craft",
+
+      "circle_image": "shopify:\/\/shop_images\/circle-placeholder.png",
+      "main_image": "shopify:\/\/shop_images\/main-placeholder.png",
+      "secondary_image": "shopify:\/\/shop_images\/secondary-placeholder.png",
+
+      "button_text": "Shop now",
+      "button_link": "#",
+      "padding_top": 36,
+      "padding_bottom": 36
+    },
+    "blocks": [
+      {
+        "type": "feature",
+        "settings": {
+          "feature_title": "High quality product",
+          "feature_text": "Each item is made with care and attention to detail.",
+          "text_color_hover": "#c6a87d",
+          "text_color": "#7A7A7A"
+        }
+      },
+      {
+        "type": "feature",
+        "settings": {
+          "feature_title": "Unique Handcrafted Design",
+          "feature_text": "Our artisans handcraft every piece with precision.",
+          "text_color_hover": "#c6a87d",
+          "text_color": "#7A7A7A"
+        }
+      },
+      {
+        "type": "feature",
+        "settings": {
+          "feature_title": "Eco-Friendly Materials",
+          "feature_text": "Sourced sustainably for a better environment.",
+          "text_color_hover": "#c6a87d",
+          "text_color": "#7A7A7A"
+        }
+      }
+    ]
+  }
+]
+
+}
+{% endschema %}

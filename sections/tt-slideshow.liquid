@@ -1,0 +1,501 @@
+{% style %}
+    .ttslideshow--{{ section.id }} .swiper-pagination-side {
+     position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-100%);
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        justify-content: center;
+    }
+
+    .ttslideshow--{{ section.id }} .swiper-pagination-bullet {
+        width: 13px;
+        height: 13px;
+      background: #000;
+      opacity: 0.4;
+    }
+
+    .ttslideshow--{{ section.id }} .swiper-pagination-bullet-active {
+      opacity: 1;
+    }
+        {% for block in section.blocks %}
+        .slide--{{ block.id }} .main-slide{
+          flex-direction: {% if block.settings.layout_direction == 'reverse' %}row-reverse{% else %}row{% endif %};
+        }
+          .slide--{{ block.id }} .sub-heading{
+            color:{{ block.settings.subheading_color }};
+          }
+          .slide--{{ block.id }} .slide-heading{
+            color:{{ block.settings.heading_color }};
+          }
+        .slide--{{ block.id }} .button {
+            border-radius: {{ block.settings.btn_border_radius }}px;
+            padding: 0 3px;
+                 background-color: {{ block.settings.button_bg }};
+              color: {{ block.settings.button_text }};
+          }
+                  .slide--{{ block.id }} .button::before {
+              background-color: {{ block.settings.button_bg_hover }};
+            }
+             .slide--{{ block.id }} .button:Hover{
+            color: {{ block.settings.button_text_hover }};
+             }
+           {% endfor %}
+        @media screen and (max-width: 450px) {
+        .tt-hero-slider .main-slide {
+          flex-direction: column;
+          gap: 4rem;
+          margin: 6rem auto;
+        }
+      }
+        .section-{{ section.id }}-padding {
+           padding-top: {{ section.settings.padding_top | times: 0.50 | round: 0 }}px;
+           padding-bottom: {{ section.settings.padding_bottom | times: 0.30 | round: 0 }}px;
+         }
+         @media screen and (min-width: 768px) {
+           .section-{{ section.id }}-padding {
+             padding-top: {{ section.settings.padding_top }}px;
+             padding-bottom: {{ section.settings.padding_bottom }}px;
+           }
+         }
+
+   .main-tt-slideshow .custom {
+    margin-inline: auto;
+        width: 100%;
+        padding: 0;
+   }
+   .main-tt-slideshow .space-div {
+      padding: 3rem 0 0 305px;
+  }
+
+  @media(min-width:1450px){
+    .main-tt-slideshow .custom {
+        max-width: 1350px;
+    }
+  }
+
+  @media(max-width:1449px){
+    .main-tt-slideshow .custom {
+      max-width: 1260px;
+    }
+    .main-tt-slideshow .space-div {
+      padding: 3rem 0 0 265px;
+    }
+  }
+
+  @media(max-width:1430px){
+    .main-tt-slideshow .custom {
+          max-width: 1230px;
+      }
+      .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 265px;
+      }
+  }
+
+  @media(max-width:1400px){
+    .main-tt-slideshow .custom {
+          max-width: 1190px;
+      }
+  }
+
+  @media(max-width:1363px){
+  .main-tt-slideshow .custom {
+          max-width: 1150px;
+      }
+          .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 255px;
+      }
+  }
+  @media(max-width:1330px){
+  .main-tt-slideshow .custom {
+          max-width: 1110px;
+      }
+         .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 265px;
+      }
+  }
+
+  @media(max-width:1280px){
+  .main-tt-slideshow .custom {
+          max-width: 1080px;
+      }
+  }
+  @media(max-width:1258px){
+      .main-tt-slideshow .custom {
+          max-width: 1100px;
+      }
+      .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 286px;
+      }
+  }
+
+  @media(max-width:1218px){
+        .main-tt-slideshow .custom {
+          max-width: 1050px;
+      }
+    }
+
+    @media(max-width:1185px){
+      .main-tt-slideshow .custom {
+          max-width: 1010px;
+      }
+      .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 276px;
+      }
+    }
+
+      @media(max-width:1170px){
+      .main-tt-slideshow .custom {
+          max-width: 980px;
+      }
+      .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 266px;
+      }
+    }
+
+      @media(max-width:1154px){
+      .main-tt-slideshow .custom {
+          max-width: 1060px;
+      }
+          .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 316px;
+      }
+    }
+
+    @media(max-width:1126px){
+       .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 336px;
+      }
+    }
+    @media(max-width:1098px){
+   .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 346px;
+      }
+    }
+
+    @media(max-width:1064px){
+        .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 336px;
+      }
+          .main-tt-slideshow .custom {
+          max-width: 1010px;
+      }
+    }
+    @media(max-width:1044px){
+        .main-tt-slideshow .space-div {
+          padding: 3rem 0 0 336px;
+      }
+          .main-tt-slideshow .custom {
+          max-width: 1010px;
+      }
+    }
+     @media(max-width:1023px){
+        .main-tt-slideshow .custom {
+          max-width: 100%;
+      }
+      .main-tt-slideshow .space-div {
+          padding: 0;
+      }
+    }
+{% endstyle %}
+
+<div class="main-tt-slideshow section-{{ section.id }} section-{{ section.id }}-padding">
+  <div class="{{section.settings.dropdown_container}}">
+    <div class="space-div">
+      <div class="swiper ttslideshow--{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'slide' %}
+                <div class="swiper-slide slide--{{ block.id }}">
+                  <div class="main-slide">
+                    <div class="inner-left">
+                      {% if block.settings.image != blank %}
+                        <img
+                          src="{{ block.settings.image | img_url: 'master' }}"
+                          alt="{{ block.settings.heading }}"
+                          class="slide-main-img"
+                          loading="lazy"
+                          width=""
+                          height=""
+                        >
+                      {% else %}
+                        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                      <div class="hero-content-area">
+                        <div class="content-area">
+                          {% if block.settings.subheading != blank %}
+                            <span class="sub-heading">{{ block.settings.subheading }}</span>
+                          {% endif %}
+                          {% if block.settings.heading != blank %}
+                            <h1 class="slide-heading">{{ block.settings.heading }}</h1>
+                          {% endif %}
+
+                          {% if block.settings.btn_label != blank %}
+                            <a href="{{ block.settings.btn_link }}" class="button button-hover-style">
+                              {{ block.settings.btn_label }}
+                            </a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% when '@app' %}
+                {% render block %}
+            {% endcase %}
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination swiper-pagination-side"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+      document.addEventListener('DOMContentLoaded', function () {
+        new Swiper('.ttslideshow--{{ section.id }}', {
+          effect: 'fade',
+         autoplay: {{ section.settings.enable_autoplay | json }} ? {
+      delay: {{ section.settings.autoplay_delay | default: 4000 }},
+      disableOnInteraction: false,
+    } : false,
+          speed: {{ section.settings.transition_speed | default: 1200 }},
+          loop: {{ section.settings.loop }},
+          fadeEffect: {
+            crossFade: true,
+          },
+
+        pagination: {
+    el: '.ttslideshow--{{ section.id }} .swiper-pagination',
+    clickable: true,
+  },
+
+          keyboard: {
+            enabled: true,
+            onlyInViewport: true,
+          },
+
+          breakpoints: {
+            640: {
+              speed: 1000,
+            },
+            1024: {
+              speed: 1200,
+            },
+          },
+
+          on: {
+            slideChangeTransitionStart: function () {
+              const slides = document.querySelectorAll('.ttslideshow--{{ section.id }} .swiper-slide img');
+            },
+            slideChangeTransitionEnd: function () {
+              const activeSlide = document.querySelector('.ttslideshow--{{ section.id }} .swiper-slide-active img');
+            },
+          },
+        });
+      });
+</script>
+
+{% schema %}
+{
+  "name": "TT Slideshow",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "select",
+      "id": "dropdown_container",
+      "label": "Container For section",
+      "default": "custom",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page Width"
+        },
+        {
+          "value": "container",
+          "label": "Container"
+        },
+        {
+          "value": "custom",
+          "label": "Custom Width"
+        },
+        {
+          "value": "full",
+          "label": "Full Width"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "autoplay_delay",
+      "label": "Autoplay Delay (ms)",
+      "default": 4000
+    },
+    {
+      "type": "number",
+      "id": "transition_speed",
+      "label": "Transition Speed (ms)",
+      "default": 1200
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop Slides",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Main Image (Left)",
+          "info": "image size 820 width X 580 height"
+        },
+        {
+          "type": "header",
+          "content": "Text side animation"
+        },
+        {
+          "type": "select",
+          "id": "aos_effect_sec",
+          "label": "Section Animation",
+          "options": [
+            { "value": "fade-up", "label": "Fade Up" },
+            { "value": "fade-down", "label": "Fade Down" },
+            { "value": "zoom-in", "label": "Zoom In" },
+            { "value": "zoom-in-up", "label": "Zoom In Up" },
+            { "value": "fade-left", "label": "Fade Left" },
+            { "value": "fade-right", "label": "Fade Right" }
+          ],
+          "default": "fade-right"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Sub Heading",
+          "default": "Krafti Art? It’s A craft"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color",
+          "label": "Sub Heading Color",
+          "default": "#b38f64"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Best Modern Wood Handmade & Krafti Art Collection"
+        },
+
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#222"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label",
+          "default": "Shop by Collections"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "button_bg",
+          "label": "Button background color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "button_text",
+          "label": "Button text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_hover",
+          "label": "Button hover background color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_text_hover",
+          "label": "Button hover text color",
+          "default": "#fff"
+        },
+        {
+          "type": "range",
+          "id": "btn_border_radius",
+          "label": "Banner Button Radius",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "TT Slideshow",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
